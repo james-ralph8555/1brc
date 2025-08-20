@@ -313,16 +313,9 @@ let config = SessionConfig::new()
 2. **Testing**: Maintain correctness tests for any changes
 3. **Documentation**: Update performance analysis for new optimizations
 
-## License
-
-GNU General Public License v3.0. See [LICENSE](LICENSE) for details.
-
 ## Acknowledgments
 
 - [One Billion Row Challenge](https://github.com/gunnarmorling/1brc) by Gunnar Morling
 - [Apache DataFusion](https://github.com/apache/arrow-datafusion) team
 - Rust community for excellent tooling and optimization capabilities
 
----
-
-*This implementation demonstrates that high-level abstractions need not sacrifice performance when properly optimized, achieving sub-3-second processing of one billion rows while maintaining code safety and maintainability.*
