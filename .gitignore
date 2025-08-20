@@ -8,6 +8,10 @@
 # Java class files
 *.class
 
+# Compiled libraries
+*.so
+*.a
+
 # Large data files
 *measurements.txt*
 *test.txt
