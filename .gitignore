@@ -9,7 +9,14 @@
 *.class
 
 # Large data files
-/measurements.txt
+*measurements.txt*
+*test.txt
+
+# AI generated files
+CLAUDE.md
+
+# Development files
+dev/
 
 # IDE configuration files
 .vscode/
