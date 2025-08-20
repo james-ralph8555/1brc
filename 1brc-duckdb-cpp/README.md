@@ -1,7 +1,5 @@
 # One Billion Row Challenge - DuckDB C++ Implementation
 
-🏆 **CHALLENGE COMPLETED: 7.416 seconds** ⚡
-
 A high-performance C++ implementation of the One Billion Row Challenge (1BRC) using the DuckDB API. This solution achieves **exceptional sub-8-second performance** by leveraging DuckDB's analytical database capabilities rather than implementing custom parsing and aggregation logic.
 
 ## 🎯 Benchmark Results
@@ -360,10 +358,6 @@ Rather than implementing complex, error-prone data processing components from sc
 - **Performance Tier**: Top-tier 1BRC submission results
 
 This solution stands as a powerful testament that **strategic architecture choices** can deliver exceptional performance with remarkably clean, maintainable code.
-
-## License
-
-This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 

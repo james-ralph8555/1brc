@@ -8,8 +8,8 @@ The One Billion Row Challenge (1BRC) tests the limits of data processing perform
 
 ### Key Achievement
 
-This implementation achieves a **~90x performance improvement** over a naive baseline through systematic optimization:
-- From ~215 seconds to 6.263 seconds ± 0.190s on the full 1-billion-row dataset
+This implementation achieves a improvement over a naive baseline through systematic optimization:
+- 6.263 seconds ± 0.190s on the full 1-billion-row dataset
 - Demonstrates effective performance tuning of general-purpose query engines
 
 ## Features
