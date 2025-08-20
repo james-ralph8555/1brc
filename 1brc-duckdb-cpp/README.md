@@ -123,13 +123,14 @@ Follow these exact steps to reproduce our **7.416-second** result:
 
 ### Step 1: Build the Project
 ```bash
-# Create and enter build directory
+# Using the build script (recommended)
+./build_updated.sh release      # For optimized build (default)
+# OR
+./build_updated.sh debug        # For fast debug build
+
+# Manual build (alternative)
 mkdir -p build && cd build
-
-# Configure with Release optimizations
 cmake -DCMAKE_BUILD_TYPE=Release ..
-
-# Compile with aggressive optimizations
 make
 ```
 
@@ -165,9 +166,10 @@ java -cp .. dev.morling.onebrc.CreateMeasurements 100000
 # Run quick test
 ./build/1brc_duckdb measurements.txt
 
-# Run comprehensive test suite
-chmod +x quick_test.sh
-./quick_test.sh
+# Run comprehensive test suite (uses measurements_1k.txt)
+chmod +x test.sh
+./test.sh                       # Quick mode
+./test.sh full                  # Full mode with unit tests
 ```
 
 ## Implementation Details
@@ -266,8 +268,11 @@ std::cin.tie(NULL);
 **Test System**: AMD Ryzen 9 5900X (24 cores) @ 4.95 GHz, 32GB RAM, NixOS Linux 6.16.0
 
 ```bash
-# From the build directory - using hyperfine for accurate benchmarking
-hyperfine --warmup 3 './1brc_duckdb ../measurements.txt'
+# Using the included benchmark script (recommended)
+./benchmark.sh
+
+# Manual benchmarking from build directory
+hyperfine --warmup 3 './1brc_duckdb ../test_data/measurements_1b.txt'
 
 # Results:
 # Dataset: 14GB (1 billion rows)
@@ -312,8 +317,9 @@ This **7.416-second best result** places our solution among the **top-tier 1BRC 
 
 2. **Run Test Suite**: Use the included comprehensive test suite
    ```bash
-   chmod +x quick_test.sh
-   ./quick_test.sh
+   chmod +x test.sh
+   ./test.sh                       # Quick mode (uses measurements_1k.txt)
+   ./test.sh full                  # Full mode with unit tests
    ```
 
 3. **Generate Actual Output**: Run the C++ implementation

@@ -63,18 +63,18 @@ javac dev/morling/onebrc/CreateMeasurements.java
 java -cp . dev.morling.onebrc.CreateMeasurements 1000000000
 
 # 2a. Run Rust implementation (fastest)
-# From project root:
 cd 1brc-datafusion-rs
 ./build_updated.sh
-# Run Float64 implementation and write to results_double.csv
-time ./target/release/onebrc-datafusion-double ../measurements.txt results_double.csv
+./benchmark.sh                                              # Comprehensive benchmark
+# OR manually:
+time ./target/release/onebrc-datafusion-double ../test_data/measurements_1b.txt results_double.csv
 
 # 2b. Run C++ implementation
-# From project root:
-cd 1brc-duckdb-cpp
+cd ../1brc-duckdb-cpp
 ./build_updated.sh
-# Run DOUBLE implementation and write to results_double.csv
-time ./build/1brc_duckdb_double ../measurements.txt results_double.csv
+./benchmark.sh                                              # Comprehensive benchmark  
+# OR manually:
+time ./build/1brc_duckdb_double ../test_data/measurements_1b.txt results_double.csv
 ```
 
 ## Architecture Strategy
@@ -104,17 +104,24 @@ Results are sorted alphabetically by station name with temperatures rounded to o
 1brc/
 ├── dev/morling/onebrc/          # Java data generator (shared)
 ├── measurements.txt             # Generated dataset (shared)
+├── test_data/                   # Test datasets
+│   ├── measurements_1k.txt     # 1,000 row test dataset
+│   └── measurements_1b.txt     # 1 billion row dataset
 ├── 1brc-duckdb-cpp/            # C++ implementation using DuckDB
 │   ├── README.md               # Detailed C++ implementation guide
 │   ├── CLAUDE.md               # Claude Code guidance
 │   ├── src/main_double.cpp     # Double-precision implementation
 │   ├── src/main_decimal.cpp    # Decimal-precision implementation
+│   ├── test.sh                 # Test script (uses measurements_1k.txt)
+│   ├── benchmark.sh            # Comprehensive benchmark script
 │   └── build/                  # Compiled binaries
 ├── 1brc-datafusion-rs/         # Rust implementation using DataFusion  
 │   ├── README.md               # Detailed Rust implementation guide
 │   ├── CLAUDE.md               # Claude Code guidance
 │   ├── src/main_double.rs      # Float64 implementation
 │   ├── src/main_decimal.rs     # Decimal128 implementation
+│   ├── test.sh                 # Test script (uses measurements_1k.txt)
+│   ├── benchmark.sh            # Comprehensive benchmark script
 │   └── target/release/         # Compiled binaries
 └── README.md                   # This overview file
 ```

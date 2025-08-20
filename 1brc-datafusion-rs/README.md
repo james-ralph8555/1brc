@@ -26,9 +26,17 @@ This implementation achieves a improvement over a naive baseline through systema
 
 - **Project Name**: `onebrc-datafusion-rs`
 - **DataFusion Version**: 42.0.0 (latest compatible)
+- **Dual Schema Support**: Both Float64 and Decimal128(3,1) temperature types
 - **All Optimizations**: Explicit schema, compiler tuning, parallelism, PGO-ready
 - **Tests**: Unit tests passing with correctness validation
 - **Sample Data**: Included for immediate testing
+
+### Available Executables
+
+The project builds two optimized executables:
+
+- **`onebrc-datafusion-double`**: Uses Float64 for temperature values (recommended for performance)
+- **`onebrc-datafusion-decimal`**: Uses Decimal128(3,1) for exact decimal precision
 
 ## Quick Start
 
@@ -45,17 +53,29 @@ This implementation achieves a improvement over a naive baseline through systema
 git clone <repository-url>
 cd 1brc-datafusion-rs
 
+# Using the build script (recommended)
+./build_updated.sh release      # For optimized build (default)
+# OR
+./build_updated.sh debug        # For fast debug build
+
 # Run tests to verify correctness
 cargo test
 
-# Build optimized binary (RUSTFLAGS configured in Cargo.toml)
-cargo build --release
+# Run test script (includes measurements_1k.txt testing)
+./test.sh                       # Quick mode (default)
+./test.sh full                  # Includes performance tests with measurements_1k.txt
 
-# Run on your dataset
-./target/release/onebrc-datafusion-rs path/to/measurements.txt
+# Manual build (alternative)
+cargo build --release          # RUSTFLAGS configured in Cargo.toml
+
+# Run on your dataset (double schema)
+./target/release/onebrc-datafusion-double path/to/measurements.txt results.csv
+
+# Run on your dataset (decimal schema)
+./target/release/onebrc-datafusion-decimal path/to/measurements.txt results.csv
 
 # Quick test with sample data
-cargo run sample_measurements.txt
+./target/release/onebrc-datafusion-double sample_measurements.txt results.csv
 ```
 
 ### Generate Test Data
@@ -153,7 +173,7 @@ Use runtime profiling data for final optimization:
 RUSTFLAGS="-Cprofile-generate=/tmp/pgo-data" cargo build --release
 
 # Generate profile data
-./target/release/onebrc-datafusion-rs sample_data.txt
+./target/release/onebrc-datafusion-double sample_data.txt results.csv
 
 # Merge profiles
 llvm-profdata merge -o /tmp/pgo-data/merged.profdata /tmp/pgo-data
@@ -174,14 +194,17 @@ Use a two-tiered benchmarking strategy:
 2. **Validation**: Full 1B row dataset for official measurements
 
 ```bash
-# Quick development benchmark
-hyperfine --warmup 3 './target/release/onebrc-datafusion-rs sample_10M.txt'
+# Comprehensive benchmark with the included script (recommended)
+./benchmark.sh
 
-# Official benchmark
-hyperfine --warmup 3 './target/release/onebrc-datafusion-rs measurements.txt'
+# Quick development benchmark
+hyperfine --warmup 3 './target/release/onebrc-datafusion-double sample_10M.txt sample_results.csv'
+
+# Official benchmark (manual)
+hyperfine --warmup 3 './target/release/onebrc-datafusion-double ../test_data/measurements_1b.txt results.csv'
 
 # Test with included sample
-hyperfine --warmup 3 './target/release/onebrc-datafusion-rs sample_measurements.txt'
+hyperfine --warmup 3 './target/release/onebrc-datafusion-double sample_measurements.txt results.csv'
 ```
 
 ### Performance Results
@@ -190,7 +213,7 @@ hyperfine --warmup 3 './target/release/onebrc-datafusion-rs sample_measurements.
 
 Using hyperfine with 3 warmup runs on 1 billion row dataset:
 ```bash
-hyperfine --warmup 3 './target/release/onebrc-datafusion-rs measurements.txt'
+hyperfine --warmup 3 './target/release/onebrc-datafusion-double measurements.txt results.csv'
 ```
 
 **Mean time: 6.263 seconds ± 0.190s**
@@ -256,7 +279,7 @@ For maximum performance, use PGO with representative workload:
 # Complete PGO workflow
 mkdir -p /tmp/pgo-data
 RUSTFLAGS="-Cprofile-generate=/tmp/pgo-data" cargo build --release
-./target/release/onebrc-datafusion-rs sample_measurements.txt
+./target/release/onebrc-datafusion-double sample_measurements.txt results.csv
 LLVM_PROFDATA_PATH=$(find ~/.rustup -name "llvm-profdata" | head -n 1)
 $LLVM_PROFDATA_PATH merge -o /tmp/pgo-data/merged.profdata /tmp/pgo-data
 RUSTFLAGS="-Cprofile-use=/tmp/pgo-data/merged.profdata" cargo build --release
