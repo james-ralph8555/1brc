@@ -76,7 +76,7 @@ cd 1brc
 
 ## Performance Optimization Journey
 
-### 1. Baseline Implementation (215.3s)
+### 1. Baseline Implementation
 
 Simple DataFrame API usage with schema inference:
 
@@ -88,7 +88,7 @@ let df = ctx.read_csv(file_path, CsvReadOptions::new()
 
 **Problem**: Schema inference requires reading and parsing sample data, causing massive overhead.
 
-### 2. Explicit Schema Definition (48.2s → 4.5x improvement)
+### 2. Explicit Schema Definition
 
 Provide exact schema to eliminate inference:
 
@@ -106,7 +106,7 @@ let df = ctx.read_csv(file_path, CsvReadOptions::new()
 
 **Impact**: Single largest performance gain by providing perfect type information.
 
-### 3. Compiler Optimizations (16.1s → 3.0x improvement)
+### 3. Compiler Optimizations
 
 Aggressive Cargo.toml settings and native CPU targeting:
 
@@ -132,7 +132,7 @@ cargo build --release
 
 **Impact**: Enables SIMD instructions and aggressive inlining across crate boundaries.
 
-### 4. DataFusion Engine Tuning (2.8s → 5.8x improvement)
+### 4. DataFusion Engine Tuning
 
 Configure parallelism to match hardware:
 
@@ -144,7 +144,7 @@ let ctx = SessionContext::new_with_config(config);
 
 **Impact**: Full utilization of multi-core CPU for parallel scan and aggregation.
 
-### 5. Profile-Guided Optimization (2.4s → 1.17x improvement)
+### 5. Profile-Guided Optimization
 
 Use runtime profiling data for final optimization:
 
@@ -221,7 +221,6 @@ hyperfine --warmup 3 './target/release/onebrc-datafusion-rs measurements.txt'
 ├── README.md                                      # This file
 ├── CLAUDE.md                                      # Claude Code guidance
 ├── datafusion_1brc_rs_implementation_guide.txt    # Detailed implementation guide
-└── LICENSE                                        # GPL v3 license
 ```
 
 ## Implementation Details
