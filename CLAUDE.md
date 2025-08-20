@@ -50,14 +50,14 @@ This approach avoids the complexity of building custom high-performance parsers,
 - **Strategy**: Single SQL query leveraging DuckDB's READ_CSV function with explicit schema
 - **Performance**: **7.416 seconds best time** for 1 billion rows (9.638s mean ±3.169s)
 - **Build**: CMake with aggressive optimization flags (`-O3 -march=native -flto`)
-- **Key Optimizations**: All-core parallelization, 16GB memory limit, precise DECIMAL(3,1) types
+- **Key Optimizations**: All-core parallelization, 16GB memory limit. Supports both `DOUBLE` and `DECIMAL(3,1)` temperature types.
 
 ### 1brc-datafusion-rs  
 - **Technology**: Rust with Apache DataFusion query engine
 - **Strategy**: SQL-based approach with systematic optimization (schema elimination, compiler tuning, parallelism)
 - **Performance**: **~6.26 seconds** for 1 billion rows
 - **Build**: Cargo with aggressive release profile and Profile-Guided Optimization (PGO)
-- **Key Optimizations**: Explicit schema definition, native CPU targeting, multi-core target partitions
+- **Key Optimizations**: Explicit schema definition, native CPU targeting, multi-core target partitions. Supports both `Float64` and `Decimal128(3,1)` types.
 
 ## Development Commands
 
@@ -75,36 +75,30 @@ java -cp . dev.morling.onebrc.CreateMeasurements 100000
 
 ### Build Implementations
 ```bash
-# C++ DuckDB version (standardized build script)
+# C++ DuckDB version (builds both double and decimal executables)
 cd 1brc-duckdb-cpp
 ./build_updated.sh release        # Optimized build (default)
 ./build_updated.sh debug          # Fast debug build
 
-# Manual build (alternative)
-mkdir -p build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release .. && make
-
-# Rust DataFusion version (standardized build script)
+# Rust DataFusion version (builds both double and decimal executables)
 cd 1brc-datafusion-rs
 ./build_updated.sh release        # Optimized build (default)  
 ./build_updated.sh debug          # Fast debug build
-
-# Manual build (alternative)
-cargo build --release
 ```
 
 ### Run Implementations
 ```bash
-# C++ DuckDB version (from build directory)
-cd 1brc-duckdb-cpp/build
-./1brc_duckdb ../measurements.txt
+# C++ DuckDB (run from 1brc-duckdb-cpp directory)
+# Double schema
+./build/1brc_duckdb_double ../measurements.txt results_double.csv
+# Decimal schema
+./build/1brc_duckdb_decimal ../measurements.txt results_decimal.csv
 
-# Rust DataFusion version
-cd 1brc-datafusion-rs
-./target/release/onebrc-datafusion-rs measurements.txt
-
-# Quick test with sample data
-./target/release/onebrc-datafusion-rs sample_measurements.txt
+# Rust DataFusion (run from 1brc-datafusion-rs directory)
+# Float64 schema
+./target/release/onebrc-datafusion-double ../measurements.txt results_double.csv
+# Decimal128 schema
+./target/release/onebrc-datafusion-decimal ../measurements.txt results_decimal.csv
 ```
 
 ### Performance Benchmarking
@@ -123,22 +117,20 @@ hyperfine --warmup 3 './target/release/onebrc-datafusion-rs measurements.txt'
 
 ### Testing Implementation Correctness
 ```bash
-# C++ implementation tests (standardized)
+# C++ implementation tests
 cd 1brc-duckdb-cpp
-./test.sh quick        # Quick verification (default)
-./test.sh full         # Comprehensive test suite
+./quick_test_updated.sh
 
-# Rust implementation tests (standardized)
+# Rust implementation tests
 cd 1brc-datafusion-rs
-./test.sh quick        # Quick verification (default)
-./test.sh full         # Comprehensive test suite including cargo test
+./test_updated.sh
 ```
 
 ## Expected Output Format
 
-All implementations process the input format `<station_name>;<temperature>` and produce output in the format:
-```
-<station_name>=<min>/<mean>/<max>
+All implementations process the input format `<station_name>;<temperature>` and produce a CSV file with the format:
+```csv
+station_name,min_measurement,mean_measurement,max_measurement
 ```
 
 Results are sorted alphabetically by station name, with temperatures rounded to one decimal place.
@@ -163,7 +155,7 @@ Results are sorted alphabetically by station name, with temperatures rounded to 
 - Scripts include argument validation and detailed build status reporting
 
 ### Test Script Standards
-- **Quick Mode**: `./test.sh quick` - Basic functionality tests (default)
-- **Full Mode**: `./test.sh full` - Comprehensive test suite with performance tests
-- Auto-detects available executables (original + standardized dual-schema versions)
-- Unified scripts handle both console and CSV output formats
+- **C++**: `1brc-duckdb-cpp/quick_test_updated.sh` for validation
+- **Rust**: `1brc-datafusion-rs/test_updated.sh` for validation
+- Scripts auto-detect and test available executables (`double` and `decimal` versions)
+- Scripts validate the generated CSV output

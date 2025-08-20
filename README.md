@@ -63,15 +63,18 @@ javac dev/morling/onebrc/CreateMeasurements.java
 java -cp . dev.morling.onebrc.CreateMeasurements 1000000000
 
 # 2a. Run Rust implementation (fastest)
+# From project root:
 cd 1brc-datafusion-rs
-cargo build --release
-time ./target/release/onebrc-datafusion-rs ../measurements.txt
+./build_updated.sh
+# Run Float64 implementation and write to results_double.csv
+time ./target/release/onebrc-datafusion-double ../measurements.txt results_double.csv
 
 # 2b. Run C++ implementation
+# From project root:
 cd 1brc-duckdb-cpp
-mkdir -p build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release .. && make
-time ./1brc_duckdb ../measurements.txt
+./build_updated.sh
+# Run DOUBLE implementation and write to results_double.csv
+time ./build/1brc_duckdb_double ../measurements.txt results_double.csv
 ```
 
 ## Architecture Strategy
@@ -86,9 +89,12 @@ Both implementations use a **query engine approach** rather than custom data pro
 This approach avoids the complexity of building custom high-performance parsers, instead relying on heavily optimized, parallel, and vectorized analytical database engines.
 
 ### Output Format
-Both implementations process input format `<station_name>;<temperature>` and produce:
-```
-<station_name>=<min>/<mean>/<max>
+Both implementations process input format `<station_name>;<temperature>` and produce a CSV file:
+```csv
+station_name,min_measurement,mean_measurement,max_measurement
+Bulawayo,8.9,9.0,9.1
+Hamburg,12.0,12.6,13.2
+Palembang,38.8,38.9,39.0
 ```
 Results are sorted alphabetically by station name with temperatures rounded to one decimal place.
 
@@ -101,12 +107,14 @@ Results are sorted alphabetically by station name with temperatures rounded to o
 ├── 1brc-duckdb-cpp/            # C++ implementation using DuckDB
 │   ├── README.md               # Detailed C++ implementation guide
 │   ├── CLAUDE.md               # Claude Code guidance
-│   ├── src/main.cpp            # Main implementation
+│   ├── src/main_double.cpp     # Double-precision implementation
+│   ├── src/main_decimal.cpp    # Decimal-precision implementation
 │   └── build/                  # Compiled binaries
 ├── 1brc-datafusion-rs/         # Rust implementation using DataFusion  
 │   ├── README.md               # Detailed Rust implementation guide
 │   ├── CLAUDE.md               # Claude Code guidance
-│   ├── src/main.rs             # Main implementation
+│   ├── src/main_double.rs      # Float64 implementation
+│   ├── src/main_decimal.rs     # Decimal128 implementation
 │   └── target/release/         # Compiled binaries
 └── README.md                   # This overview file
 ```
