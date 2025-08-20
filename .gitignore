@@ -14,7 +14,9 @@
 
 # Large data files
 *measurements.txt*
-*test.txt
+
+# C++ project data files
+/1brc-duckdb-cpp/data/
 
 # AI generated files
 CLAUDE.md
