@@ -6,10 +6,10 @@ This repository contains high-performance implementations of the [One Billion Ro
 
 Both implementations achieve exceptional sub-10-second performance on the full 1-billion-row dataset:
 
-| Implementation | Technology | Best Time | Mean Time | Strategy |
-|---|---|---|---|---|
-| **1brc-datafusion-rs** | Rust + DataFusion | **~6.26s** | 6.26s ± 0.19s | Query engine + systematic optimization |
-| **1brc-duckdb-cpp** | C++ + DuckDB | **7.416s** | 9.64s ± 3.17s | Analytical database + aggressive compiler flags |
+| Implementation | Technology | Best Time | Mean Time | Binary Size | Strategy |
+|---|---|---|---|---|---|
+| **1brc-datafusion-rs** | Rust + DataFusion | **~6.26s** | 6.26s ± 0.19s | 37 MB | Query engine + systematic optimization |
+| **1brc-duckdb-cpp** | C++ + DuckDB | **7.416s** | 9.64s ± 3.17s | 25 KB | Analytical database + aggressive compiler flags |
 
 *Benchmarks performed on AMD Ryzen 9 5900X (24 cores) @ 4.95 GHz, 32GB RAM*
 
