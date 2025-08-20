@@ -7,7 +7,6 @@
 
 set -e
 
-TEST_DATA_DIR="test_data"
 OUTPUT_DIR="test_output"
 TEST_MODE="${1:-quick}"
 
@@ -72,19 +71,7 @@ for i in "${!EXECUTABLES[@]}"; do
 done
 
 # Create test directories
-mkdir -p "$TEST_DATA_DIR"
 mkdir -p "$OUTPUT_DIR"
-
-# Test data setup
-setup_basic_test_data() {
-    cat > "$TEST_DATA_DIR/basic.txt" << EOF
-Hamburg;12.0
-Bulawayo;8.9
-Palembang;38.8
-St. John's;15.2
-Cracow;12.6
-EOF
-}
 
 test_count=0
 passed_count=0
@@ -112,11 +99,9 @@ for i in "${!EXECUTABLES[@]}"; do
     echo -e "\n${YELLOW}Test $((i + 2)): Binary execution - $exec_name${NC}"
     
     # Test 2a: Basic execution
-    setup_basic_test_data
-    
     echo -n "    Testing basic execution... "
     output_file="$OUTPUT_DIR/test_output.csv"
-    if ./"$executable" "$TEST_DATA_DIR/basic.txt" "$output_file" 2>/dev/null; then
+    if ./"$executable" "../test_data/measurements_1k.txt" "$output_file" 2>/dev/null; then
         if [[ -f "$output_file" && -s "$output_file" ]]; then
             echo -e "${GREEN}✓ Passed${NC}"
             ((test_count++))
@@ -174,7 +159,6 @@ if [[ "$TEST_MODE" == "full" || "$TEST_MODE" == "FULL" ]]; then
 fi
 
 # Cleanup
-rm -rf "$TEST_DATA_DIR"
 rm -rf "$OUTPUT_DIR"
 
 # Summary
