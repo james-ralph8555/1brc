@@ -80,13 +80,6 @@ This approach avoids the complexity of building custom high-performance parsing 
   sudo apt-get install cmake
   ```
 
-### DuckDB C++ Library
-Download the stable release for "C/C++" from the [official DuckDB installation page](https://duckdb.org/docs/installation/):
-
-Required files:
-- `duckdb.hpp` - C++ header file
-- `libduckdb.so` (Linux) or `libduckdb.dylib` (macOS) - shared library
-
 ### Optional: Performance Benchmarking
 - **hyperfine** for accurate benchmarking
   ```bash
@@ -99,7 +92,6 @@ Required files:
 1brc-duckdb-cpp/
 ├── build/                    # Directory for compiled files
 ├── data/                     # Location for measurements.txt
-├── lib/                      # Location for duckdb.hpp and libduckdb.so
 ├── src/                      # C++ source code
 │   └── main.cpp             # Main application
 ├── CMakeLists.txt           # Build configuration
@@ -116,16 +108,7 @@ git clone <repository-url>
 cd 1brc-duckdb-cpp
 ```
 
-### 2. Set Up DuckDB Library
-```bash
-# Create lib directory
-mkdir -p lib
-
-# Download and extract DuckDB C++ library
-# Place duckdb.hpp and libduckdb.so in the lib/ directory
-```
-
-### 3. Get Test Data
+### 2. Get Test Data
 Use the data generator from the parent directory to create the measurements dataset:
 
 ```bash

@@ -9,7 +9,7 @@ The One Billion Row Challenge (1BRC) tests the limits of data processing perform
 ### Key Achievement
 
 This implementation achieves a **~90x performance improvement** over a naive baseline through systematic optimization:
-- From ~215 seconds to ~2.4 seconds on the full 1-billion-row dataset
+- From ~215 seconds to 6.263 seconds ± 0.190s on the full 1-billion-row dataset
 - Demonstrates effective performance tuning of general-purpose query engines
 
 ## Features
@@ -195,20 +195,8 @@ hyperfine --warmup 3 './target/release/onebrc-datafusion-rs measurements.txt'
 
 **Mean time: 6.263 seconds ± 0.190s**
 - Range: 6.083s - 6.560s across 10 runs  
-- **34.4x improvement** over theoretical baseline (215.3s)
 - Highly consistent performance with low variance
 
-**Theoretical Performance Journey:**
-
-| Optimization Stage | Time (seconds) | Improvement | Cumulative |
-|-------------------|----------------|-------------|------------|
-| Baseline | 215.3s | - | 1.0x |
-| Explicit Schema | 48.2s | 4.5x | 4.5x |
-| Compiler Optimized | 16.1s | 3.0x | 13.4x |
-| Engine Tuned | 2.8s | 5.8x | 76.9x |
-| PGO Optimized | 2.4s | 1.17x | 89.7x |
-
-*Theoretical results based on optimization guide analysis*
 
 ## Project Structure
 
