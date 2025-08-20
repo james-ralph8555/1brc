@@ -111,18 +111,6 @@ Results are sorted alphabetically by station name with temperatures rounded to o
 └── README.md                   # This overview file
 ```
 
-## Performance Analysis
-
-Both implementations demonstrate that strategic technology choices can deliver exceptional performance:
-
-| Optimization | Impact |
-|---|---|
-| **Query Engine Strategy** | Eliminates custom parsing complexity |
-| **Explicit Schema Definition** | Removes costly type inference (4.5x improvement) |
-| **Aggressive Compiler Optimization** | Native CPU instruction targeting (3.0x improvement) |
-| **Multi-core Parallelization** | Perfect scaling across all CPU cores (5.8x improvement) |
-| **Memory-First Processing** | Eliminates I/O bottlenecks |
-
 ### Key Insights
 - **DataFusion (Rust)**: Achieves consistent ~6.26s through systematic optimization
 - **DuckDB (C++)**: Achieves 7.416s best time with excellent parallelization (1650% CPU usage)
