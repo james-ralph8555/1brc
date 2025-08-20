@@ -1,1 +1,20 @@
 .aider*
+# Rust build artifacts
+/1brc-datafusion-rs/target/
+
+# C++ build artifacts
+/1brc-duckdb-cpp/build/
+
+# Java class files
+*.class
+
+# Large data files
+/measurements.txt
+
+# IDE configuration files
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
