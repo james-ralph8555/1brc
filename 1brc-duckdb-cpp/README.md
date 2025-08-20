@@ -1,16 +1,6 @@
 # One Billion Row Challenge - DuckDB C++ Implementation
 
-A high-performance C++ implementation of the One Billion Row Challenge (1BRC) using the DuckDB API. This solution achieves **exceptional sub-8-second performance** by leveraging DuckDB's analytical database capabilities rather than implementing custom parsing and aggregation logic.
-
-## 🎯 Benchmark Results
-
-- **Dataset**: 1 billion rows (14 GB)
-- **Best Runtime**: **7.416 seconds**
-- **Mean Runtime**: 9.638 seconds (±3.169s)
-- **Processing Rate**: ~135 million rows/second (best run)
-- **Throughput**: ~1.89 GB/second (best run)
-- **CPU Utilization**: ~1650% (excellent multi-threading)
-- **Hardware**: AMD Ryzen 9 5900X (24 cores) @ 4.95 GHz, 32GB RAM
+A high-performance C++ implementation of the One Billion Row Challenge (1BRC) using the DuckDB API. This solution achieves **exceptional performance** by leveraging DuckDB's analytical database capabilities rather than implementing custom parsing and aggregation logic.
 
 ## Table of Contents
 
@@ -153,7 +143,6 @@ hyperfine --warmup 3 './1brc_duckdb ../measurements.txt'
 time ./1brc_duckdb ../measurements.txt
 
 # Expected results:
-# - Runtime: ~7-10 seconds (varies by hardware)
 # - Output: 413 weather stations with min/mean/max temperatures
 # - Format: Station=min/mean/max (alphabetically sorted)
 ```
@@ -263,9 +252,7 @@ std::cin.tie(NULL);
 
 ## Benchmarking
 
-### 🏆 Actual Performance Results
-
-**Test System**: AMD Ryzen 9 5900X (24 cores) @ 4.95 GHz, 32GB RAM, NixOS Linux 6.16.0
+See the [main README.md](../../README.md) for consolidated performance benchmarks.
 
 ```bash
 # Using the included benchmark script (recommended)
@@ -273,25 +260,7 @@ std::cin.tie(NULL);
 
 # Manual benchmarking from build directory
 hyperfine --warmup 3 './1brc_duckdb ../test_data/measurements_1b.txt'
-
-# Results:
-# Dataset: 14GB (1 billion rows)
-# Best time: 7.416 seconds
-# Mean time: 9.638 seconds (±3.169s)
-# User time: 157.104s (across all cores)
-# System time: 2.895s
-# CPU utilization: ~1650%
 ```
-
-### Performance Breakdown
-| Metric | Value | Analysis |
-|--------|-------|----------|
-| **Best Runtime** | **7.416 seconds** | Outstanding performance |
-| **Mean Runtime** | 9.638 seconds (±3.169s) | Consistent sub-10s results |
-| **Processing Rate** | 135 million rows/sec | Exceptional throughput |
-| **Data Throughput** | 1.89 GB/second | High I/O efficiency |
-| **CPU Utilization** | ~1650% | Perfect parallelization |
-| **Memory Usage** | In-memory processing | No disk bottlenecks |
 
 ### Optimization Impact
 Our implementation demonstrates the power of strategic technology choices:
@@ -301,11 +270,8 @@ Our implementation demonstrates the power of strategic technology choices:
 | **DuckDB Engine** | Purpose-built analytical database | Massive speedup over custom parsing |
 | **SQL Query Strategy** | Single declarative query | Eliminates complex C++ logic |
 | **Compiler Optimization** | `-O3 -march=native -flto` | Native CPU instruction optimization |
-| **Multi-threading** | All 24 cores utilized @ 1865% | Perfect scaling |
-| **Memory Configuration** | 16GB limit, in-memory processing | Zero I/O bottlenecks |
-
-### Performance Comparison
-This **7.416-second best result** places our solution among the **top-tier 1BRC submissions**, demonstrating that strategic architecture choices can deliver exceptional performance with remarkably clean code.
+| **Multi-threading** | All available cores utilized | Perfect scaling |
+| **Memory Configuration** | Sufficient memory limit for in-memory processing | Zero I/O bottlenecks |
 
 ## Verification
 
@@ -346,8 +312,8 @@ This implementation demonstrates the power of strategic technology choices in hi
 1. **DuckDB's Analytical Engine**: Leveraged a purpose-built columnar database instead of custom parsing
 2. **Single SQL Query**: Eliminated complex C++ logic with declarative SQL
 3. **Aggressive Optimization**: `-O3 -march=native -flto` compiler flags
-4. **Perfect Parallelization**: Utilized all 24 CPU cores at 1865% utilization
-5. **Memory-First Strategy**: 16GB limit ensured zero I/O bottlenecks
+4. **Perfect Parallelization**: Utilized all available CPU cores
+5. **Memory-First Strategy**: Sufficient memory limit ensured zero I/O bottlenecks
 
 ### Implementation Philosophy
 Rather than implementing complex, error-prone data processing components from scratch, this solution leverages:
@@ -357,8 +323,6 @@ Rather than implementing complex, error-prone data processing components from sc
 - **Minimal C++ Overhead**: Focus only on configuration and result formatting
 
 ### Final Results
-- **Best Runtime**: 7.416 seconds for 1 billion rows
-- **Mean Runtime**: 9.638 seconds (±3.169s) over 10 runs
 - **Code Complexity**: <100 lines of C++ + single SQL query
 - **Maintainability**: Clean, readable, and easily extensible
 - **Performance Tier**: Top-tier 1BRC submission results

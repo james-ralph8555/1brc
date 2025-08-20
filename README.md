@@ -4,12 +4,14 @@ This repository contains high-performance implementations of the [One Billion Ro
 
 ## 🏆 Performance Results
 
-Both implementations achieve exceptional sub-10-second performance on the full 1-billion-row dataset:
+Both implementations achieve exceptional sub-10-second performance on the full 1-billion-row dataset. The table below summarizes the benchmark results for both `Decimal` and `Double` schema types.
 
-| Implementation | Technology | Best Time | Mean Time | Binary Size | Strategy |
-|---|---|---|---|---|---|
-| **1brc-datafusion-rs** | Rust + DataFusion | **~6.26s** | 6.26s ± 0.19s | 37 MB | Query engine + systematic optimization |
-| **1brc-duckdb-cpp** | C++ + DuckDB | **7.416s** | 9.64s ± 3.17s | 25 KB | Analytical database + aggressive compiler flags |
+| Implementation         | Schema  | Mean Time (s) | Std Dev (s) | Min Time (s) | Max Time (s) |
+| ---------------------- | ------- | ------------- | ----------- | ------------ | ------------ |
+| **1brc-datafusion-rs** | Decimal | 5.56          | 0.05        | 5.49         | 5.67         |
+| **1brc-datafusion-rs** | Double  | 5.68          | 0.11        | 5.47         | 5.83         |
+| **1brc-duckdb-cpp**    | Decimal | 8.53          | 0.08        | 8.45         | 8.71         |
+| **1brc-duckdb-cpp**    | Double  | 8.83          | 0.06        | 8.70         | 8.92         |
 
 *Benchmarks performed on AMD Ryzen 9 5900X (24 cores) @ 4.95 GHz, 32GB RAM*
 
@@ -17,15 +19,13 @@ Both implementations achieve exceptional sub-10-second performance on the full 1
 
 ### [1brc-datafusion-rs](./1brc-datafusion-rs/) - Rust Implementation
 - **Technology**: Apache DataFusion query engine
-- **Performance**: 6.26 seconds (±0.19s) for 1 billion rows
 - **Strategy**: Systematic optimization with explicit schema, compiler tuning, and Profile-Guided Optimization
 - **Key Features**: High-level API constraint, production-ready safety
 
 ### [1brc-duckdb-cpp](./1brc-duckdb-cpp/) - C++ Implementation  
 - **Technology**: DuckDB analytical database
-- **Performance**: 7.416 seconds best time (9.64s ±3.17s mean) for 1 billion rows
 - **Strategy**: Single SQL query with aggressive compiler optimizations
-- **Key Features**: Minimal code complexity, maximum CPU utilization (1650%)
+- **Key Features**: Minimal code complexity, maximum CPU utilization
 
 ## Generating Test Data
 
@@ -127,8 +127,8 @@ Results are sorted alphabetically by station name with temperatures rounded to o
 ```
 
 ### Key Insights
-- **DataFusion (Rust)**: Achieves consistent ~6.26s through systematic optimization
-- **DuckDB (C++)**: Achieves 7.416s best time with excellent parallelization (1650% CPU usage)
+- **DataFusion (Rust)**: Achieves highly consistent performance through systematic optimization
+- **DuckDB (C++)**: Achieves excellent parallelization
 - Both approaches prioritize **declarative simplicity** over custom implementation complexity
 
 ## References
