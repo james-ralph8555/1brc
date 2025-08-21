@@ -1,0 +1,172 @@
+# Data Types and Schemas
+
+## Factory Functions
+
+These should be used to create Arrow data types and schemas.
+
+| Function | Description |
+|---|---|
+| [`null`](../generated/pyarrow.null.html#pyarrow.null)() | Create instance of null type. |
+| [`bool_`](../generated/pyarrow.bool_.html#pyarrow.bool_)() | Create instance of boolean type. |
+| [`int8`](../generated/pyarrow.int8.html#pyarrow.int8)() | Create instance of signed int8 type. |
+| [`int16`](../generated/pyarrow.int16.html#pyarrow.int16)() | Create instance of signed int16 type. |
+| [`int32`](../generated/pyarrow.int32.html#pyarrow.int32)() | Create instance of signed int32 type. |
+| [`int64`](../generated/pyarrow.int64.html#pyarrow.int64)() | Create instance of signed int64 type. |
+| [`uint8`](../generated/pyarrow.uint8.html#pyarrow.uint8)() | Create instance of unsigned int8 type. |
+| [`uint16`](../generated/pyarrow.uint16.html#pyarrow.uint16)() | Create instance of unsigned uint16 type. |
+| [`uint32`](../generated/pyarrow.uint32.html#pyarrow.uint32)() | Create instance of unsigned uint32 type. |
+| [`uint64`](../generated/pyarrow.uint64.html#pyarrow.uint64)() | Create instance of unsigned uint64 type. |
+| [`float16`](../generated/pyarrow.float16.html#pyarrow.float16)() | Create half-precision floating point type. |
+| [`float32`](../generated/pyarrow.float32.html#pyarrow.float32)() | Create single-precision floating point type. |
+| [`float64`](../generated/pyarrow.float64.html#pyarrow.float64)() | Create double-precision floating point type. |
+| [`time32`](../generated/pyarrow.time32.html#pyarrow.time32)(unit) | Create instance of 32-bit time (time of day) type with unit resolution. |
+| [`time64`](../generated/pyarrow.time64.html#pyarrow.time64)(unit) | Create instance of 64-bit time (time of day) type with unit resolution. |
+| [`timestamp`](../generated/pyarrow.timestamp.html#pyarrow.timestamp)(unit[, tz]) | Create instance of timestamp type with resolution and optional time zone. |
+| [`date32`](../generated/pyarrow.date32.html#pyarrow.date32)() | Create instance of 32-bit date (days since UNIX epoch 1970-01-01). |
+| [`date64`](../generated/pyarrow.date64.html#pyarrow.date64)() | Create instance of 64-bit date (milliseconds since UNIX epoch 1970-01-01). |
+| [`duration`](../generated/pyarrow.duration.html#pyarrow.duration)(unit) | Create instance of a duration type with unit resolution. |
+| [`month_day_nano_interval`](../generated/pyarrow.month_day_nano_interval.html#pyarrow.month_day_nano_interval)() | Create instance of an interval type representing months, days and nanoseconds between two dates. |
+| [`binary`](../generated/pyarrow.binary.html#pyarrow.binary)(int length=-1) | Create variable-length or fixed size binary type. |
+| [`string`](../generated/pyarrow.string.html#pyarrow.string)() | Create UTF8 variable-length string type. |
+| [`utf8`](../generated/pyarrow.utf8.html#pyarrow.utf8)() | Alias for string(). |
+| [`large_binary`](../generated/pyarrow.large_binary.html#pyarrow.large_binary)() | Create large variable-length binary type. |
+| [`large_string`](../generated/pyarrow.large_string.html#pyarrow.large_string)() | Create large UTF8 variable-length string type. |
+| [`large_utf8`](../generated/pyarrow.large_utf8.html#pyarrow.large_utf8)() | Alias for large_string(). |
+| [`binary_view`](../generated/pyarrow.binary_view.html#pyarrow.binary_view)() | Create a variable-length binary view type. |
+| [`string_view`](../generated/pyarrow.string_view.html#pyarrow.string_view)() | Create UTF8 variable-length string view type. |
+| [`decimal128`](../generated/pyarrow.decimal128.html#pyarrow.decimal128)(int precision, int scale=0) | Create decimal type with precision and scale and 128-bit width. |
+| [`decimal256`](../generated/pyarrow.decimal256.html#pyarrow.decimal256)(int precision, int scale=0) | Create decimal type with precision and scale and 256-bit width. |
+| [`list_`](../generated/pyarrow.list_.html#pyarrow.list_)(value_type, int list_size=-1) | Create ListType instance from child data type or field. |
+| [`large_list`](../generated/pyarrow.large_list.html#pyarrow.large_list)(value_type) | Create LargeListType instance from child data type or field. |
+| [`list_view`](../generated/pyarrow.list_view.html#pyarrow.list_view)(value_type) | Create ListViewType instance from child data type or field. |
+| [`large_list_view`](../generated/pyarrow.large_list_view.html#pyarrow.large_list_view)(value_type) | Create LargeListViewType instance from child data type or field. |
+| [`map_`](../generated/pyarrow.map_.html#pyarrow.map_)(key_type, item_type[, keys_sorted]) | Create MapType instance from key and item data types or fields. |
+| [`struct`](../generated/pyarrow.struct.html#pyarrow.struct)(fields) | Create StructType instance from fields. |
+| [`dictionary`](../generated/pyarrow.dictionary.html#pyarrow.dictionary)(index_type, value_type, ...) | Dictionary (categorical, or simply encoded) type. |
+| [`run_end_encoded`](../generated/pyarrow.run_end_encoded.html#pyarrow.run_end_encoded)(run_end_type, value_type) | Create RunEndEncodedType from run-end and value types. |
+| [`fixed_shape_tensor`](../generated/pyarrow.fixed_shape_tensor.html#pyarrow.fixed_shape_tensor)(DataType value_type, shape) | Create instance of fixed shape tensor extension type with shape and optional names of tensor dimensions and indices of the desired logical ordering of dimensions. |
+| [`union`](../generated/pyarrow.union.html#pyarrow.union)(child_fields, mode[, type_codes]) | Create UnionType from child fields. |
+| [`dense_union`](../generated/pyarrow.dense_union.html#pyarrow.dense_union)(child_fields[, type_codes]) | Create DenseUnionType from child fields. |
+| [`sparse_union`](../generated/pyarrow.sparse_union.html#pyarrow.sparse_union)(child_fields[, type_codes]) | Create SparseUnionType from child fields. |
+| [`opaque`](../generated/pyarrow.opaque.html#pyarrow.opaque)(DataType storage_type, str type_name, ...) | Create instance of opaque extension type. |
+| [`bool8`](../generated/pyarrow.bool8.html#pyarrow.bool8)() | Create instance of bool8 extension type. |
+| [`uuid`](../generated/pyarrow.uuid.html#pyarrow.uuid)() | Create UuidType instance. |
+| [`json_`](../generated/pyarrow.json_.html#pyarrow.json_)(DataType storage_type=utf8) | Create instance of JSON extension type. |
+| [`field`](../generated/pyarrow.field.html#pyarrow.field)(name[, type, nullable, metadata]) | Create a pyarrow.Field instance. |
+| [`schema`](../generated/pyarrow.schema.html#pyarrow.schema)(fields[, metadata]) | Construct pyarrow.Schema from collection of fields. |
+| [`from_numpy_dtype`](../generated/pyarrow.from_numpy_dtype.html#pyarrow.from_numpy_dtype)(dtype) | Convert NumPy dtype to pyarrow.DataType. |
+
+## Utility Functions
+
+| Function | Description |
+|---|---|
+| [`unify_schemas`](../generated/pyarrow.unify_schemas.html#pyarrow.unify_schemas)(schemas, *[, promote_options]) | Unify schemas by merging fields by name. |
+
+## Type Classes
+
+Do not instantiate these classes directly. Instead, call one of the factory functions above.
+
+| Class | Description |
+|---|---|
+| [`DataType`](../generated/pyarrow.DataType.html#pyarrow.DataType)() | Base class of all Arrow data types. |
+| [`DictionaryType`](../generated/pyarrow.DictionaryType.html#pyarrow.DictionaryType) | Concrete class for dictionary data types. |
+| [`ListType`](../generated/pyarrow.ListType.html#pyarrow.ListType) | Concrete class for list data types. |
+| [`ListViewType`](../generated/pyarrow.ListViewType.html#pyarrow.ListViewType) | Concrete class for list view data types. |
+| [`FixedSizeListType`](../generated/pyarrow.FixedSizeListType.html#pyarrow.FixedSizeListType) | Concrete class for fixed size list data types. |
+| [`LargeListType`](../generated/pyarrow.LargeListType.html#pyarrow.LargeListType) | Concrete class for large list data types (like ListType, but with 64-bit offsets). |
+| [`LargeListViewType`](../generated/pyarrow.LargeListViewType.html#pyarrow.LargeListViewType) | Concrete class for large list view data types (like ListViewType, but with 64-bit offsets). |
+| [`MapType`](../generated/pyarrow.MapType.html#pyarrow.MapType) | Concrete class for map data types. |
+| [`StructType`](../generated/pyarrow.StructType.html#pyarrow.StructType) | Concrete class for struct data types. |
+| [`UnionType`](../generated/pyarrow.UnionType.html#pyarrow.UnionType) | Base class for union data types. |
+| [`DenseUnionType`](../generated/pyarrow.DenseUnionType.html#pyarrow.DenseUnionType) | Concrete class for dense union types. |
+| [`SparseUnionType`](../generated/pyarrow.SparseUnionType.html#pyarrow.SparseUnionType) | Concrete class for sparse union types. |
+| [`TimestampType`](../generated/pyarrow.TimestampType.html#pyarrow.TimestampType) | Concrete class for timestamp data types. |
+| [`Time32Type`](../generated/pyarrow.Time32Type.html#pyarrow.Time32Type) | Concrete class for time32 data types. |
+| [`Time64Type`](../generated/pyarrow.Time64Type.html#pyarrow.Time64Type) | Concrete class for time64 data types. |
+| [`DurationType`](../generated/pyarrow.DurationType.html#pyarrow.DurationType) | Concrete class for duration data types. |
+| [`FixedSizeBinaryType`](../generated/pyarrow.FixedSizeBinaryType.html#pyarrow.FixedSizeBinaryType) | Concrete class for fixed-size binary data types. |
+| [`Decimal32Type`](../generated/pyarrow.Decimal32Type.html#pyarrow.Decimal32Type) | Concrete class for decimal32 data types. |
+| [`Decimal64Type`](../generated/pyarrow.Decimal64Type.html#pyarrow.Decimal64Type) | Concrete class for decimal64 data types. |
+| [`Decimal128Type`](../generated/pyarrow.Decimal128Type.html#pyarrow.Decimal128Type) | Concrete class for decimal128 data types. |
+| [`Decimal256Type`](../generated/pyarrow.Decimal256Type.html#pyarrow.Decimal256Type) | Concrete class for decimal256 data types. |
+| [`Field`](../generated/pyarrow.Field.html#pyarrow.Field)() | A named field, with a data type, nullability, and optional metadata. |
+| [`Schema`](../generated/pyarrow.Schema.html#pyarrow.Schema)() | A named collection of types a.k.a schema. |
+| [`RunEndEncodedType`](../generated/pyarrow.RunEndEncodedType.html#pyarrow.RunEndEncodedType) | Concrete class for run-end encoded types. |
+
+Specific classes and functions for extension types.
+
+| Class | Description |
+|---|---|
+| [`BaseExtensionType`](../generated/pyarrow.BaseExtensionType.html#pyarrow.BaseExtensionType) | Concrete base class for extension types. |
+| [`ExtensionType`](../generated/pyarrow.ExtensionType.html#pyarrow.ExtensionType)(DataType storage_type, ...) | Concrete base class for Python-defined extension types. |
+| [`UnknownExtensionType`](../generated/pyarrow.UnknownExtensionType.html#pyarrow.UnknownExtensionType)(DataType storage_type, ...) | A concrete class for Python-defined extension types that refer to an unknown Python implementation. |
+| [`register_extension_type`](../generated/pyarrow.register_extension_type.html#pyarrow.register_extension_type)(ext_type) | Register a Python extension type. |
+| [`unregister_extension_type`](../generated/pyarrow.unregister_extension_type.html#pyarrow.unregister_extension_type)(type_name) | Unregister a Python extension type. |
+
+[Canonical extension types](../../format/CanonicalExtensions.html) implemented by PyArrow.
+
+| Type | Description |
+|---|---|
+| [`FixedShapeTensorType`](../generated/pyarrow.FixedShapeTensorType.html#pyarrow.FixedShapeTensorType) | Concrete class for fixed shape tensor extension type. |
+| [`OpaqueType`](../generated/pyarrow.OpaqueType.html#pyarrow.OpaqueType) | Concrete class for opaque extension type. |
+| [`JsonType`](../generated/pyarrow.JsonType.html#pyarrow.JsonType) | Concrete class for JSON extension type. |
+| [`UuidType`](../generated/pyarrow.UuidType.html#pyarrow.UuidType) | Concrete class for UUID extension type. |
+| [`Bool8Type`](../generated/pyarrow.Bool8Type.html#pyarrow.Bool8Type) | Concrete class for bool8 extension type. |
+
+## Type Checking
+
+These functions are predicates to check whether a `DataType` instance represents a given data type (such as `int32`) or general category (such as "is a signed integer").
+
+| Function | Description |
+|---|---|
+| [`is_boolean`](../generated/pyarrow.types.is_boolean.html#pyarrow.types.is_boolean)(t) | Return True if value is an instance of type: boolean. |
+| [`is_integer`](../generated/pyarrow.types.is_integer.html#pyarrow.types.is_integer)(t) | Return True if value is an instance of type: any integer. |
+| [`is_signed_integer`](../generated/pyarrow.types.is_signed_integer.html#pyarrow.types.is_signed_integer)(t) | Return True if value is an instance of type: signed integer. |
+| [`is_unsigned_integer`](../generated/pyarrow.types.is_unsigned_integer.html#pyarrow.types.is_unsigned_integer)(t) | Return True if value is an instance of type: unsigned integer. |
+| [`is_int8`](../generated/pyarrow.types.is_int8.html#pyarrow.types.is_int8)(t) | Return True if value is an instance of type: int8. |
+| [`is_int16`](../generated/pyarrow.types.is_int16.html#pyarrow.types.is_int16)(t) | Return True if value is an instance of type: int16. |
+| [`is_int32`](../generated/pyarrow.types.is_int32.html#pyarrow.types.is_int32)(t) | Return True if value is an instance of type: int32. |
+| [`is_int64`](../generated/pyarrow.types.is_int64.html#pyarrow.types.is_int64)(t) | Return True if value is an instance of type: int64. |
+| [`is_uint8`](../generated/pyarrow.types.is_uint8.html#pyarrow.types.is_uint8)(t) | Return True if value is an instance of type: uint8. |
+| [`is_uint16`](../generated/pyarrow.types.is_uint16.html#pyarrow.types.is_uint16)(t) | Return True if value is an instance of type: uint16. |
+| [`is_uint32`](../generated/pyarrow.types.is_uint32.html#pyarrow.types.is_uint32)(t) | Return True if value is an instance of type: uint32. |
+| [`is_uint64`](../generated/pyarrow.types.is_uint64.html#pyarrow.types.is_uint64)(t) | Return True if value is an instance of type: uint64. |
+| [`is_floating`](../generated/pyarrow.types.is_floating.html#pyarrow.types.is_floating)(t) | Return True if value is an instance of type: floating point numeric. |
+| [`is_float16`](../generated/pyarrow.types.is_float16.html#pyarrow.types.is_float16)(t) | Return True if value is an instance of type: float16 (half-precision). |
+| [`is_float32`](../generated/pyarrow.types.is_float32.html#pyarrow.types.is_float32)(t) | Return True if value is an instance of type: float32 (single precision). |
+| [`is_float64`](../generated/pyarrow.types.is_float64.html#pyarrow.types.is_float64)(t) | Return True if value is an instance of type: float64 (double precision). |
+| [`is_decimal`](../generated/pyarrow.types.is_decimal.html#pyarrow.types.is_decimal)(t) | Return True if value is an instance of type: decimal. |
+| [`is_decimal128`](../generated/pyarrow.types.is_decimal128.html#pyarrow.types.is_decimal128)(t) | Return True if value is an instance of type: decimal128. |
+| [`is_decimal256`](../generated/pyarrow.types.is_decimal256.html#pyarrow.types.is_decimal256)(t) | Return True if value is an instance of type: decimal256. |
+| [`is_list`](../generated/pyarrow.types.is_list.html#pyarrow.types.is_list)(t) | Return True if value is an instance of type: list. |
+| [`is_large_list`](../generated/pyarrow.types.is_large_list.html#pyarrow.types.is_large_list)(t) | Return True if value is an instance of type: large list. |
+| [`is_fixed_size_list`](../generated/pyarrow.types.is_fixed_size_list.html#pyarrow.types.is_fixed_size_list)(t) | Return True if value is an instance of type: fixed size list. |
+| [`is_list_view`](../generated/pyarrow.types.is_list_view.html#pyarrow.types.is_list_view)(t) | Return True if value is an instance of type: list view. |
+| [`is_large_list_view`](../generated/pyarrow.types.is_large_list_view.html#pyarrow.types.is_large_list_view)(t) | Return True if value is an instance of type: large list view. |
+| [`is_struct`](../generated/pyarrow.types.is_struct.html#pyarrow.types.is_struct)(t) | Return True if value is an instance of type: struct. |
+| [`is_union`](../generated/pyarrow.types.is_union.html#pyarrow.types.is_union)(t) | Return True if value is an instance of type: union. |
+| [`is_nested`](../generated/pyarrow.types.is_nested.html#pyarrow.types.is_nested)(t) | Return True if value is an instance of type: nested type. |
+| [`is_run_end_encoded`](../generated/pyarrow.types.is_run_end_encoded.html#pyarrow.types.is_run_end_encoded)(t) | Return True if value is an instance of type: run-end encoded. |
+| [`is_temporal`](../generated/pyarrow.types.is_temporal.html#pyarrow.types.is_temporal)(t) | Return True if value is an instance of type: date, time, timestamp or duration. |
+| [`is_timestamp`](../generated/pyarrow.types.is_timestamp.html#pyarrow.types.is_timestamp)(t) | Return True if value is an instance of type: timestamp. |
+| [`is_date`](../generated/pyarrow.types.is_date.html#pyarrow.types.is_date)(t) | Return True if value is an instance of type: date. |
+| [`is_date32`](../generated/pyarrow.types.is_date32.html#pyarrow.types.is_date32)(t) | Return True if value is an instance of type: date32 (days). |
+| [`is_date64`](../generated/pyarrow.types.is_date64.html#pyarrow.types.is_date64)(t) | Return True if value is an instance of type: date64 (milliseconds). |
+| [`is_time`](../generated/pyarrow.types.is_time.html#pyarrow.types.is_time)(t) | Return True if value is an instance of type: time. |
+| [`is_time32`](../generated/pyarrow.types.is_time32.html#pyarrow.types.is_time32)(t) | Return True if value is an instance of type: time32. |
+| [`is_time64`](../generated/pyarrow.types.is_time64.html#pyarrow.types.is_time64)(t) | Return True if value is an instance of type: time64. |
+| [`is_duration`](../generated/pyarrow.types.is_duration.html#pyarrow.types.is_duration)(t) | Return True if value is an instance of type: duration. |
+| [`is_interval`](../generated/pyarrow.types.is_interval.html#pyarrow.types.is_interval)(t) | Return True if value is an instance of type: interval. |
+| [`is_null`](../generated/pyarrow.types.is_null.html#pyarrow.types.is_null)(t) | Return True if value is an instance of type: null. |
+| [`is_binary`](../generated/pyarrow.types.is_binary.html#pyarrow.types.is_binary)(t) | Return True if value is an instance of type: variable-length binary. |
+| [`is_unicode`](../generated/pyarrow.types.is_unicode.html#pyarrow.types.is_unicode)(t) | Alias for is_string. |
+| [`is_string`](../generated/pyarrow.types.is_string.html#pyarrow.types.is_string)(t) | Return True if value is an instance of type: string (utf8 unicode). |
+| [`is_large_binary`](../generated/pyarrow.types.is_large_binary.html#pyarrow.types.is_large_binary)(t) | Return True if value is an instance of type: large variable-length binary. |
+| [`is_large_unicode`](../generated/pyarrow.types.is_large_unicode.html#pyarrow.types.is_large_unicode)(t) | Alias for is_large_string. |
+| [`is_large_string`](../generated/pyarrow.types.is_large_string.html#pyarrow.types.is_large_string)(t) | Return True if value is an instance of type: large string (utf8 unicode). |
+| [`is_binary_view`](../generated/pyarrow.types.is_binary_view.html#pyarrow.types.is_binary_view)(t) | Return True if value is an instance of type: variable-length binary view. |
+| [`is_string_view`](../generated/pyarrow.types.is_string_view.html#pyarrow.types.is_string_view)(t) | Return True if value is an instance of type: variable-length string (utf-8) view. |
+| [`is_fixed_size_binary`](../generated/pyarrow.types.is_fixed_size_binary.html#pyarrow.types.is_fixed_size_binary)(t) | Return True if value is an instance of type: fixed size binary. |
+| [`is_map`](../generated/pyarrow.types.is_map.html#pyarrow.types.is_map)(t) | Return True if value is an instance of type: map. |
+| [`is_dictionary`](../generated/pyarrow.types.is_dictionary.html#pyarrow.types.is_dictionary)(t) | Return True if value is an instance of type: dictionary-encoded. |
+| [`is_primitive`](../generated/pyarrow.types.is_primitive.html#pyarrow.types.is_primitive)(t) | Return True if value is an instance of type: primitive type. |
