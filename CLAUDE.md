@@ -12,6 +12,9 @@ This is a central repository for One Billion Row Challenge (1BRC) implementation
 1brc/
 ├── dev/morling/onebrc/          # Java data generator (shared)
 ├── measurements.txt             # Generated dataset (shared)
+├── test_data/                   # Test datasets
+│   ├── measurements_1k.txt     # 1,000 row test dataset
+│   └── measurements_1b.txt     # 1 billion row dataset
 ├── 1brc-duckdb-cpp/            # C++ implementation using DuckDB
 ├── 1brc-datafusion-rs/         # Rust implementation using DataFusion
 └── README.md                    # Dataset generation instructions
@@ -119,11 +122,11 @@ hyperfine --warmup 3 './target/release/onebrc-datafusion-rs measurements.txt'
 ```bash
 # C++ implementation tests
 cd 1brc-duckdb-cpp
-./quick_test_updated.sh
+./test.sh                       # Uses measurements_1k.txt for testing
 
 # Rust implementation tests
 cd 1brc-datafusion-rs
-./test_updated.sh
+./test.sh                       # Uses measurements_1k.txt for performance tests
 ```
 
 ## Expected Output Format
@@ -155,7 +158,8 @@ Results are sorted alphabetically by station name, with temperatures rounded to 
 - Scripts include argument validation and detailed build status reporting
 
 ### Test Script Standards
-- **C++**: `1brc-duckdb-cpp/quick_test_updated.sh` for validation
-- **Rust**: `1brc-datafusion-rs/test_updated.sh` for validation
+- **C++**: `1brc-duckdb-cpp/test.sh` for validation
+- **Rust**: `1brc-datafusion-rs/test.sh` for validation
 - Scripts auto-detect and test available executables (`double` and `decimal` versions)
+- Scripts use `../test_data/measurements_1k.txt` for performance testing when available
 - Scripts validate the generated CSV output

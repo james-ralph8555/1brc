@@ -73,6 +73,10 @@ This approach avoids the complexity of building custom high-performance parsing 
   ```bash
   cargo install hyperfine
   ```
+- **flamegraph** for performance profiling (optional)
+  ```bash
+  cargo install flamegraph
+  ```
 
 ## Project Structure
 
@@ -258,9 +262,31 @@ See the [main README.md](../../README.md) for consolidated performance benchmark
 # Using the included benchmark script (recommended)
 ./benchmark.sh
 
+# Generate flamegraphs for performance profiling
+./benchmark.sh --flamegraph
+
 # Manual benchmarking from build directory
 hyperfine --warmup 3 './1brc_duckdb ../test_data/measurements_1b.txt'
 ```
+
+### Flamegraph Profiling
+
+Generate interactive flamegraphs to visualize CPU time distribution:
+
+```bash
+# Generate flamegraphs for both executables
+./benchmark.sh --flamegraph
+
+# Manual flamegraph generation
+flamegraph --output=flamegraph.svg -- ./build/1brc_duckdb_double ../test_data/measurements_1b.txt results.csv
+```
+
+**Prerequisites for flamegraphs:**
+- Install flamegraph: `cargo install flamegraph`
+- On Linux: May require `echo -1 | sudo tee /proc/sys/kernel/perf_event_paranoid`
+- Requires `perf` to be available on the system
+
+Open generated `.svg` files in a browser for interactive exploration of performance hotspots.
 
 ### Optimization Impact
 Our implementation demonstrates the power of strategic technology choices:

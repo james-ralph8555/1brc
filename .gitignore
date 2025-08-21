@@ -19,7 +19,6 @@
 /1brc-duckdb-cpp/data/
 
 # AI generated files
-CLAUDE.md
 
 # Development files
 dev/
@@ -28,6 +27,12 @@ dev/
 .vscode/
 .idea/
 
+test_data/
+
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+benchmark*csv
+benchmark*json
+results*csv

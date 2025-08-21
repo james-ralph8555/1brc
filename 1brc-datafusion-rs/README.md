@@ -43,6 +43,7 @@ The project builds two optimized executables:
 - Rust 1.70+ with Cargo
 - LLVM tools (for PGO): `rustup component add llvm-tools-preview`
 - hyperfine (for benchmarking): `cargo install hyperfine`
+- cargo-flamegraph (for profiling, optional): `cargo install flamegraph`
 
 ### Basic Build and Run
 
@@ -195,6 +196,9 @@ Use a two-tiered benchmarking strategy:
 # Comprehensive benchmark with the included script (recommended)
 ./benchmark.sh
 
+# Generate flamegraphs for performance profiling
+./benchmark.sh --flamegraph
+
 # Quick development benchmark
 hyperfine --warmup 3 './target/release/onebrc-datafusion-double sample_10M.txt sample_results.csv'
 
@@ -286,6 +290,30 @@ let config = SessionConfig::new()
 ```
 
 ## Performance Analysis
+
+### Flamegraph Profiling
+
+Generate interactive flamegraphs to visualize CPU time distribution:
+
+```bash
+# Generate flamegraphs for both executables
+./benchmark.sh --flamegraph
+
+# Manual flamegraph generation
+cargo install flamegraph
+CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph \
+    --bin=onebrc-datafusion-double \
+    --release \
+    --output=flamegraph.svg \
+    -- path/to/measurements.txt results.csv
+```
+
+**Prerequisites for flamegraphs:**
+- Install flamegraph: `cargo install flamegraph`
+- On Linux: May require `echo -1 | sudo tee /proc/sys/kernel/perf_event_paranoid`
+- Debug symbols: Set `CARGO_PROFILE_RELEASE_DEBUG=true` or use release profile with `debug = true`
+
+Open generated `.svg` files in a browser for interactive exploration of performance hotspots.
 
 ### Why This Approach Works
 

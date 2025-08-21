@@ -3,6 +3,14 @@ name = "onebrc-datafusion-rs"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "onebrc-datafusion-double"
+path = "src/main_double.rs"
+
+[[bin]]
+name = "onebrc-datafusion-decimal"
+path = "src/main_decimal.rs"
+
 [dependencies]
 datafusion = "42.0.0"
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
@@ -11,8 +19,6 @@ num_cpus = "1.16.0"
 [dev-dependencies]
 tempfile = "3.8.0"
 
-[build]
-rustflags = ["-C", "target-cpu=native"]
 
 [profile.release]
 opt-level = 3
