@@ -8,21 +8,14 @@ TEST_MODE="${1:-quick}"
 
 echo "=== 1BRC DuckDB C++ Test Suite ==="
 
-# Check for executables
-EXECUTABLES=()
-if [[ -f "$BUILD_DIR/1brc_duckdb_double" ]]; then
-    EXECUTABLES+=("1brc_duckdb_double")
-fi
-if [[ -f "$BUILD_DIR/1brc_duckdb_decimal" ]]; then
-    EXECUTABLES+=("1brc_duckdb_decimal")
-fi
-
-if [[ ${#EXECUTABLES[@]} -eq 0 ]]; then
-    echo "Error: No executables found. Build first with ./build_updated.sh"
+# Check for executable
+EXECUTABLE="1brc_duckdb"
+if [[ ! -f "$BUILD_DIR/$EXECUTABLE" ]]; then
+    echo "Error: Executable $EXECUTABLE not found. Build first with ./build.sh"
     exit 1
 fi
 
-echo "Found ${#EXECUTABLES[@]} executable(s) to test"
+echo "Found executable to test: $EXECUTABLE"
 
 # Check for measurements_1k.txt
 MEASUREMENTS_1K="../test_data/measurements_1k.txt"
@@ -31,23 +24,21 @@ if [[ ! -f "$MEASUREMENTS_1K" ]]; then
     exit 1
 fi
 
-# Test each executable
+# Test the executable
 tests_passed=0
 tests_total=0
 
-for exec in "${EXECUTABLES[@]}"; do
-    echo "Testing: $exec"
-    
-    # Test with measurements_1k.txt
-    echo -n "  measurements_1k.txt test... "
-    if timeout 30s ./build/"$exec" "$MEASUREMENTS_1K" output_1k.csv >/dev/null 2>&1; then
-        echo "✓ PASS"
-        ((tests_passed++))
-    else
-        echo "✗ FAIL"
-    fi
-    ((tests_total++))
-done
+echo "Testing: $EXECUTABLE"
+
+# Test with measurements_1k.txt
+echo -n "  measurements_1k.txt test... "
+if timeout 30s ./build/"$EXECUTABLE" "$MEASUREMENTS_1K" output_1k.csv >/dev/null 2>&1; then
+    echo "✓ PASS"
+    ((tests_passed++))
+else
+    echo "✗ FAIL"
+fi
+((tests_total++))
 
 # Run unit tests if in full mode
 if [[ "$TEST_MODE" == "full" && -f "$BUILD_DIR/test_runner" ]]; then

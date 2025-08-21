@@ -29,12 +29,11 @@ This implementation achieves a significant improvement over a naive baseline thr
 - **Tests**: Unit tests passing with correctness validation
 - **Sample Data**: Included for immediate testing
 
-### Available Executables
+### Available Executable
 
-The project builds two optimized executables:
+The project builds a single optimized executable:
 
-- **`onebrc-datafusion-double`**: Uses Float64 for temperature values (recommended for performance)
-- **`onebrc-datafusion-decimal`**: Uses Decimal128(3,1) for exact decimal precision
+- **`onebrc-datafusion`**: Uses Float64 for temperature values for optimal performance
 
 ## Quick Start
 
@@ -53,9 +52,9 @@ git clone <repository-url>
 cd 1brc-datafusion-rs
 
 # Using the build script (recommended)
-./build_updated.sh release      # For optimized build (default)
+./build.sh release      # For optimized build (default)
 # OR
-./build_updated.sh debug        # For fast debug build
+./build.sh debug        # For fast debug build
 
 # Run tests to verify correctness
 cargo test
@@ -67,14 +66,11 @@ cargo test
 # Manual build (alternative)
 cargo build --release          # RUSTFLAGS configured in Cargo.toml
 
-# Run on your dataset (double schema)
-./target/release/onebrc-datafusion-double path/to/measurements.txt results.csv
-
-# Run on your dataset (decimal schema)
-./target/release/onebrc-datafusion-decimal path/to/measurements.txt results.csv
+# Run on your dataset
+./target/release/onebrc-datafusion path/to/measurements.txt results.csv
 
 # Quick test with sample data
-./target/release/onebrc-datafusion-double sample_measurements.txt results.csv
+./target/release/onebrc-datafusion sample_measurements.txt results.csv
 ```
 
 ### Generate Test Data
@@ -200,13 +196,13 @@ Use a two-tiered benchmarking strategy:
 ./benchmark.sh --flamegraph
 
 # Quick development benchmark
-hyperfine --warmup 3 './target/release/onebrc-datafusion-double sample_10M.txt sample_results.csv'
+hyperfine --warmup 3 './target/release/onebrc-datafusion sample_10M.txt sample_results.csv'
 
 # Official benchmark (manual)
-hyperfine --warmup 3 './target/release/onebrc-datafusion-double ../test_data/measurements_1b.txt results.csv'
+hyperfine --warmup 3 './target/release/onebrc-datafusion ../test_data/measurements_1b.txt results.csv'
 
 # Test with included sample
-hyperfine --warmup 3 './target/release/onebrc-datafusion-double sample_measurements.txt results.csv'
+hyperfine --warmup 3 './target/release/onebrc-datafusion sample_measurements.txt results.csv'
 ```
 
 ### Performance Results
@@ -302,7 +298,7 @@ Generate interactive flamegraphs to visualize CPU time distribution:
 # Manual flamegraph generation
 cargo install flamegraph
 CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph \
-    --bin=onebrc-datafusion-double \
+    --bin=onebrc-datafusion \
     --release \
     --output=flamegraph.svg \
     -- path/to/measurements.txt results.csv

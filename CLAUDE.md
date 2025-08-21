@@ -51,16 +51,16 @@ This approach avoids the complexity of building custom high-performance parsers,
 ### 1brc-duckdb-cpp
 - **Technology**: C++ with DuckDB analytical database
 - **Strategy**: Single SQL query leveraging DuckDB's READ_CSV function with explicit schema
-- **Performance**: **7.416 seconds best time** for 1 billion rows (9.638s mean ±3.169s)
+- **Performance**: **8.83 seconds mean time** for 1 billion rows (8.70s min, 8.92s max)
 - **Build**: CMake with aggressive optimization flags (`-O3 -march=native -flto`)
-- **Key Optimizations**: All-core parallelization, 16GB memory limit. Supports both `DOUBLE` and `DECIMAL(3,1)` temperature types.
+- **Key Optimizations**: All-core parallelization, 16GB memory limit, `DOUBLE` temperature type.
 
 ### 1brc-datafusion-rs  
 - **Technology**: Rust with Apache DataFusion query engine
 - **Strategy**: SQL-based approach with systematic optimization (schema elimination, compiler tuning, parallelism)
-- **Performance**: **~6.26 seconds** for 1 billion rows
+- **Performance**: **5.68 seconds mean time** for 1 billion rows (5.47s min, 5.83s max)
 - **Build**: Cargo with aggressive release profile and Profile-Guided Optimization (PGO)
-- **Key Optimizations**: Explicit schema definition, native CPU targeting, multi-core target partitions. Supports both `Float64` and `Decimal128(3,1)` types.
+- **Key Optimizations**: Explicit schema definition, native CPU targeting, multi-core target partitions, `Float64` type.
 
 ## Development Commands
 
@@ -78,30 +78,24 @@ java -cp . dev.morling.onebrc.CreateMeasurements 100000
 
 ### Build Implementations
 ```bash
-# C++ DuckDB version (builds both double and decimal executables)
+# C++ DuckDB version
 cd 1brc-duckdb-cpp
-./build_updated.sh release        # Optimized build (default)
-./build_updated.sh debug          # Fast debug build
+./build.sh release        # Optimized build (default)
+./build.sh debug          # Fast debug build
 
-# Rust DataFusion version (builds both double and decimal executables)
+# Rust DataFusion version
 cd 1brc-datafusion-rs
-./build_updated.sh release        # Optimized build (default)  
-./build_updated.sh debug          # Fast debug build
+./build.sh release        # Optimized build (default)  
+./build.sh debug          # Fast debug build
 ```
 
 ### Run Implementations
 ```bash
 # C++ DuckDB (run from 1brc-duckdb-cpp directory)
-# Double schema
-./build/1brc_duckdb_double ../measurements.txt results_double.csv
-# Decimal schema
-./build/1brc_duckdb_decimal ../measurements.txt results_decimal.csv
+./build/1brc_duckdb ../measurements.txt results.csv
 
 # Rust DataFusion (run from 1brc-datafusion-rs directory)
-# Float64 schema
-./target/release/onebrc-datafusion-double ../measurements.txt results_double.csv
-# Decimal128 schema
-./target/release/onebrc-datafusion-decimal ../measurements.txt results_decimal.csv
+./target/release/onebrc-datafusion ../measurements.txt results.csv
 ```
 
 ### Performance Benchmarking
@@ -153,13 +147,13 @@ Results are sorted alphabetically by station name, with temperatures rounded to 
 - All build scripts use this interpreter path for compatibility
 
 ### Build Script Standards
-- **Debug Mode**: `./build_updated.sh debug` - Fast build with debug symbols
-- **Release Mode**: `./build_updated.sh release` - Fully optimized build (default)
+- **Debug Mode**: `./build.sh debug` - Fast build with debug symbols
+- **Release Mode**: `./build.sh release` - Fully optimized build (default)
 - Scripts include argument validation and detailed build status reporting
 
 ### Test Script Standards
 - **C++**: `1brc-duckdb-cpp/test.sh` for validation
 - **Rust**: `1brc-datafusion-rs/test.sh` for validation
-- Scripts auto-detect and test available executables (`double` and `decimal` versions)
+- Scripts test the single executable with Float64/Double data type
 - Scripts use `../test_data/measurements_1k.txt` for performance testing when available
 - Scripts validate the generated CSV output

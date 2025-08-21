@@ -4,12 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name = "onebrc-datafusion-double"
-path = "src/main_double.rs"
-
-[[bin]]
-name = "onebrc-datafusion-decimal"
-path = "src/main_decimal.rs"
+name = "onebrc-datafusion"
+path = "src/main.rs"
 
 [dependencies]
 datafusion = "42.0.0"

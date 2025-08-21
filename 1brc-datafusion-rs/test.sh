@@ -30,34 +30,24 @@ case "$TEST_MODE" in
         ;;
 esac
 
-# Auto-detect available executables (check both release and debug)
-DOUBLE_EXEC_RELEASE="target/release/onebrc-datafusion-double"
-DECIMAL_EXEC_RELEASE="target/release/onebrc-datafusion-decimal"
-DOUBLE_EXEC_DEBUG="target/debug/onebrc-datafusion-double"
-DECIMAL_EXEC_DEBUG="target/debug/onebrc-datafusion-decimal"
+# Auto-detect available executable (check both release and debug)
+EXEC_RELEASE="target/release/onebrc-datafusion"
+EXEC_DEBUG="target/debug/onebrc-datafusion"
 
-# Determine which executables to test
-EXECUTABLES=()
-EXEC_NAMES=()
+# Determine which executable to test
+EXECUTABLE=""
+EXEC_NAME=""
 
-if [[ -f "$DOUBLE_EXEC_RELEASE" ]]; then
-    EXECUTABLES+=("$DOUBLE_EXEC_RELEASE")
-    EXEC_NAMES+=("Double schema (release)")
-elif [[ -f "$DOUBLE_EXEC_DEBUG" ]]; then
-    EXECUTABLES+=("$DOUBLE_EXEC_DEBUG")
-    EXEC_NAMES+=("Double schema (debug)")
+if [[ -f "$EXEC_RELEASE" ]]; then
+    EXECUTABLE="$EXEC_RELEASE"
+    EXEC_NAME="Float64 schema (release)"
+elif [[ -f "$EXEC_DEBUG" ]]; then
+    EXECUTABLE="$EXEC_DEBUG"
+    EXEC_NAME="Float64 schema (debug)"
 fi
 
-if [[ -f "$DECIMAL_EXEC_RELEASE" ]]; then
-    EXECUTABLES+=("$DECIMAL_EXEC_RELEASE")
-    EXEC_NAMES+=("Decimal schema (release)")
-elif [[ -f "$DECIMAL_EXEC_DEBUG" ]]; then
-    EXECUTABLES+=("$DECIMAL_EXEC_DEBUG")
-    EXEC_NAMES+=("Decimal schema (debug)")
-fi
-
-if [[ ${#EXECUTABLES[@]} -eq 0 ]]; then
-    echo -e "${RED}Error: No executables found. Please build the project first.${NC}"
+if [[ -z "$EXECUTABLE" ]]; then
+    echo -e "${RED}Error: No executable found. Please build the project first.${NC}"
     echo "Available build commands:"
     echo "  ./build.sh release"
     echo "  ./build.sh debug"
@@ -65,10 +55,8 @@ if [[ ${#EXECUTABLES[@]} -eq 0 ]]; then
     exit 1
 fi
 
-echo -e "${GREEN}Found ${#EXECUTABLES[@]} executable(s) to test:${NC}"
-for i in "${!EXECUTABLES[@]}"; do
-    echo -e "  - ${EXEC_NAMES[$i]}: ${EXECUTABLES[$i]}"
-done
+echo -e "${GREEN}Found executable to test:${NC}"
+echo -e "  - $EXEC_NAME: $EXECUTABLE"
 
 # Create test directories
 mkdir -p "$OUTPUT_DIR"
@@ -89,50 +77,40 @@ else
     ((test_count++))
 fi
 
-# Test 2: Binary execution tests
-echo "DEBUG: About to start binary tests. Number of executables: ${#EXECUTABLES[@]}"
-for i in "${!EXECUTABLES[@]}"; do
-    executable="${EXECUTABLES[$i]}"
-    exec_name="${EXEC_NAMES[$i]}"
-    
-    echo "DEBUG: Testing executable $i: $executable"
-    echo -e "\n${YELLOW}Test $((i + 2)): Binary execution - $exec_name${NC}"
-    
-    # Test 2a: Basic execution
-    echo -n "    Testing basic execution... "
-    output_file="$OUTPUT_DIR/test_output.csv"
-    if ./"$executable" "../test_data/measurements_1k.txt" "$output_file" 2>/dev/null; then
-        if [[ -f "$output_file" && -s "$output_file" ]]; then
-            echo -e "${GREEN}✓ Passed${NC}"
-            ((test_count++))
-            ((passed_count++))
-        else
-            echo -e "${RED}✗ Failed (no output)${NC}"
-            ((test_count++))
-        fi
-    else
-        echo -e "${RED}✗ Failed (execution error)${NC}"
-        ((test_count++))
-    fi
-    
-    # Test 2b: Error handling
-    echo -n "    Testing error handling... "
-    if ./"$executable" 2>/dev/null; then
-        echo -e "${RED}✗ Failed (should error with no arguments)${NC}"
-        ((test_count++))
-    else
+# Test 2: Binary execution test
+echo -e "\n${YELLOW}Test 2: Binary execution - $EXEC_NAME${NC}"
+
+# Test 2a: Basic execution
+echo -n "    Testing basic execution... "
+output_file="$OUTPUT_DIR/test_output.csv"
+if ./"$EXECUTABLE" "../test_data/measurements_1k.txt" "$output_file" 2>/dev/null; then
+    if [[ -f "$output_file" && -s "$output_file" ]]; then
         echo -e "${GREEN}✓ Passed${NC}"
         ((test_count++))
         ((passed_count++))
+    else
+        echo -e "${RED}✗ Failed (no output)${NC}"
+        ((test_count++))
     fi
-done
+else
+    echo -e "${RED}✗ Failed (execution error)${NC}"
+    ((test_count++))
+fi
+
+# Test 2b: Error handling
+echo -n "    Testing error handling... "
+if ./"$EXECUTABLE" 2>/dev/null; then
+    echo -e "${RED}✗ Failed (should error with no arguments)${NC}"
+    ((test_count++))
+else
+    echo -e "${GREEN}✓ Passed${NC}"
+    ((test_count++))
+    ((passed_count++))
+fi
 
 # Full test mode: performance tests
 if [[ "$TEST_MODE" == "full" || "$TEST_MODE" == "FULL" ]]; then
     echo -e "\n${YELLOW}=== Full Test Mode: Performance Tests ===${NC}"
-    
-    # Use the first available executable for performance testing
-    primary_exec="${EXECUTABLES[0]}"
     
     # Performance test with measurements_1k.txt
     if [[ -f "../test_data/measurements_1k.txt" ]]; then
@@ -141,7 +119,7 @@ if [[ "$TEST_MODE" == "full" || "$TEST_MODE" == "FULL" ]]; then
         
         START_TIME=$(date +%s.%N)
         
-        ./"$primary_exec" "../test_data/measurements_1k.txt" "$OUTPUT_DIR/sample_output.csv" 2>/dev/null
+        ./"$EXECUTABLE" "../test_data/measurements_1k.txt" "$OUTPUT_DIR/sample_output.csv" 2>/dev/null
         
         END_TIME=$(date +%s.%N)
         RUNTIME=$(echo "$END_TIME - $START_TIME" | bc 2>/dev/null || echo "N/A")

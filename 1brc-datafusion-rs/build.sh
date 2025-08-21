@@ -1,6 +1,6 @@
 #!/run/current-system/sw/bin/bash
 
-# Build script for 1BRC DataFusion Rust Implementation (Updated with dual schemas)
+# Build script for 1BRC DataFusion Rust Implementation
 # Usage: ./build.sh [debug|release|flamegraph|pgo|clean]
 # - debug: Fast build with debug symbols
 # - release: Optimized build with native CPU targeting (default)
@@ -43,7 +43,7 @@ build_pgo() {
     echo -e "\n${YELLOW}Phase 1: Building instrumented binary for profiling...${NC}"
     RUSTFLAGS="-C target-cpu=native -C profile-generate=$PGO_DIR" cargo build --release
     
-    if [[ ! -f "target/release/onebrc-datafusion-double" ]]; then
+    if [[ ! -f "target/release/onebrc-datafusion" ]]; then
         echo -e "${RED}✗ Instrumented build failed!${NC}"
         exit 1
     fi
@@ -53,14 +53,9 @@ build_pgo() {
     echo -e "\n${YELLOW}Phase 2: Generating profile data using $PROFILE_DATA...${NC}"
     echo -e "${YELLOW}Running instrumented binary to collect profile data...${NC}"
     
-    # Run both executables to generate comprehensive profile data
-    ./target/release/onebrc-datafusion-double "$PROFILE_DATA" /tmp/pgo_output_double.csv || {
-        echo -e "${RED}✗ Profile data generation failed for double version!${NC}"
-        exit 1
-    }
-    
-    ./target/release/onebrc-datafusion-decimal "$PROFILE_DATA" /tmp/pgo_output_decimal.csv || {
-        echo -e "${RED}✗ Profile data generation failed for decimal version!${NC}"
+    # Run executable to generate profile data
+    ./target/release/onebrc-datafusion "$PROFILE_DATA" /tmp/pgo_output.csv || {
+        echo -e "${RED}✗ Profile data generation failed!${NC}"
         exit 1
     }
     
@@ -97,18 +92,16 @@ build_pgo() {
     }
     
     # Cleanup temporary files
-    rm -f /tmp/pgo_output_double.csv /tmp/pgo_output_decimal.csv
+    rm -f /tmp/pgo_output.csv
     
     echo -e "\n${GREEN}✓ Profile-Guided Optimization build completed successfully!${NC}"
-    echo -e "${GREEN}PGO-optimized executables created:${NC}"
-    echo -e "  - target/release/onebrc-datafusion-double (Float64 schema, PGO-optimized)"
-    echo -e "  - target/release/onebrc-datafusion-decimal (Decimal128(3,1) schema, PGO-optimized)"
+    echo -e "${GREEN}PGO-optimized executable created:${NC}"
+    echo -e "  - target/release/onebrc-datafusion (Float64 schema, PGO-optimized)"
     echo -e "\n${YELLOW}Profile data retained at: $PGO_DIR${NC}"
     echo -e "${YELLOW}Usage:${NC}"
-    echo -e "  ./target/release/onebrc-datafusion-double <input_file> <output_csv>"
-    echo -e "  ./target/release/onebrc-datafusion-decimal <input_file> <output_csv>"
+    echo -e "  ./target/release/onebrc-datafusion <input_file> <output_csv>"
     echo -e "\n${YELLOW}Benchmark with:${NC}"
-    echo -e "  hyperfine --warmup 3 './target/release/onebrc-datafusion-double ../measurements.txt results.csv'"
+    echo -e "  hyperfine --warmup 3 './target/release/onebrc-datafusion ../measurements.txt results.csv'"
 }
 
 # Validate build type and set build parameters
@@ -133,9 +126,8 @@ case "$BUILD_TYPE" in
         echo -e "${YELLOW}Building with debug symbols for profiling...${NC}"
         CARGO_PROFILE_RELEASE_DEBUG=true cargo build --release
         echo -e "\n${GREEN}✓ Flamegraph-ready build completed!${NC}"
-        echo -e "${GREEN}Executables ready for flamegraph profiling:${NC}"
-        echo -e "  - $TARGET_DIR/onebrc-datafusion-double (Float64 schema, debug symbols)"
-        echo -e "  - $TARGET_DIR/onebrc-datafusion-decimal (Decimal128(3,1) schema, debug symbols)"
+        echo -e "${GREEN}Executable ready for flamegraph profiling:${NC}"
+        echo -e "  - $TARGET_DIR/onebrc-datafusion (Float64 schema, debug symbols)"
         exit 0
         ;;
     "pgo"|"PGO")
@@ -167,15 +159,13 @@ else
     cargo build $BUILD_FLAG
 fi
 
-# Check if executables were created
-if [[ -f "$TARGET_DIR/onebrc-datafusion-double" ]] && [[ -f "$TARGET_DIR/onebrc-datafusion-decimal" ]]; then
+# Check if executable was created
+if [[ -f "$TARGET_DIR/onebrc-datafusion" ]]; then
     echo -e "\n${GREEN}✓ Build successful!${NC}"
-    echo -e "${GREEN}Executables created:${NC}"
-    echo -e "  - $TARGET_DIR/onebrc-datafusion-double (Float64 schema)"
-    echo -e "  - $TARGET_DIR/onebrc-datafusion-decimal (Decimal128(3,1) schema)"
+    echo -e "${GREEN}Executable created:${NC}"
+    echo -e "  - $TARGET_DIR/onebrc-datafusion (Float64 schema)"
     echo -e "\n${YELLOW}Usage:${NC}"
-    echo -e "  ./$TARGET_DIR/onebrc-datafusion-double <input_file> <output_csv>"
-    echo -e "  ./$TARGET_DIR/onebrc-datafusion-decimal <input_file> <output_csv>"
+    echo -e "  ./$TARGET_DIR/onebrc-datafusion <input_file> <output_csv>"
     echo -e "\n${YELLOW}Build completed in $BUILD_TYPE mode${NC}"
     echo -e "\n${YELLOW}Test with:${NC}"
     echo -e "  ./test.sh"

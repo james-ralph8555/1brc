@@ -33,7 +33,7 @@ RUSTFLAGS='-C target-cpu=native' cargo build --release
 cargo install hyperfine
 
 # Run performance benchmark (requires release build)
-hyperfine --warmup 3 './target/release/1brc-datafusion path/to/measurements.txt'
+hyperfine --warmup 3 './target/release/onebrc-datafusion path/to/measurements.txt results.csv'
 ```
 
 ### Profile-Guided Optimization (PGO) - Advanced
@@ -48,7 +48,7 @@ mkdir -p /tmp/pgo-data
 RUSTFLAGS="-Cprofile-generate=/tmp/pgo-data" cargo build --release
 
 # Run instrumented binary to generate profile
-./target/release/1brc-datafusion path/to/sample_data.txt
+./target/release/onebrc-datafusion path/to/sample_data.txt results.csv
 
 # Merge profile data
 LLVM_PROFDATA_PATH=$(find ~/.rustup -name "llvm-profdata" | head -n 1)
@@ -69,7 +69,7 @@ RUSTFLAGS="-Cprofile-use=/tmp/pgo-data/merged.profdata" cargo build --release
 ### Core Approach
 The implementation follows a systematic optimization approach:
 
-1. **Explicit Schema Definition**: Eliminates costly schema inference by providing exact column types (string for station, float64 for temperature)
+1. **Explicit Schema Definition**: Eliminates costly schema inference by providing exact column types (string for station, Float64 for temperature)
 2. **Compiler Optimizations**: Aggressive release profile settings with LTO and native CPU targeting
 3. **Parallelism Tuning**: Configure DataFusion's `target_partitions` to match hardware cores
 4. **Profile-Guided Optimization**: Use runtime profiling data for final performance gains

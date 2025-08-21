@@ -118,9 +118,9 @@ Follow these exact steps to reproduce our **7.416-second** result:
 ### Step 1: Build the Project
 ```bash
 # Using the build script (recommended)
-./build_updated.sh release      # For optimized build (default)
+./build.sh release      # For optimized build (default)
 # OR
-./build_updated.sh debug        # For fast debug build
+./build.sh debug        # For fast debug build
 
 # Manual build (alternative)
 mkdir -p build && cd build
@@ -179,7 +179,7 @@ WITH result AS (
         MAX(measurement) AS max_measurement
     FROM READ_CSV('data/measurements.txt', 
                   header=false, 
-                  columns={'station_name':'VARCHAR','measurement':'DECIMAL(3,1)'}, 
+                  columns={'station_name':'VARCHAR','measurement':'DOUBLE'}, 
                   delim=';')
     GROUP BY station_name
 )
@@ -252,7 +252,7 @@ std::cin.tie(NULL);
 ### Memory Management
 - **Memory Limit**: Set to 16GB+ to ensure all operations remain in-memory
 - **Thread Configuration**: Utilizes all available CPU cores
-- **Data Type Optimization**: Uses `DECIMAL(3,1)` for precise temperature representation
+- **Data Type Optimization**: Uses `DOUBLE` for efficient temperature representation
 
 ## Benchmarking
 
@@ -326,9 +326,9 @@ Our implementation demonstrates the power of strategic technology choices:
    ```
 
 ### Data Type Considerations
-- Uses `DECIMAL(3,1)` for precise temperature representation
-- Avoids floating-point precision issues with `ROUND(AVG(measurement), 1)`
-- Ensures output formatting matches challenge requirements exactly
+- Uses `DOUBLE` for efficient temperature representation
+- Applies `ROUND(AVG(measurement), 1)` for proper decimal precision
+- Ensures output formatting matches CSV requirements exactly
 
 ## 🎯 Success Story
 

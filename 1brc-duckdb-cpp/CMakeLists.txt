@@ -12,11 +12,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(duckdb)
 
-add_executable(1brc_duckdb_double src/main_double.cpp)
-add_executable(1brc_duckdb_decimal src/main_decimal.cpp)
+add_executable(1brc_duckdb src/main.cpp)
 
-target_link_libraries(1brc_duckdb_double PRIVATE duckdb)
-target_link_libraries(1brc_duckdb_decimal PRIVATE duckdb)
+target_link_libraries(1brc_duckdb PRIVATE duckdb)
 
 # Set aggressive optimization flags specifically for Release builds
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -flto")
@@ -27,8 +25,7 @@ set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address")
 
 # Ensure AddressSanitizer runtime comes first in library list
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_link_options(1brc_duckdb_double PRIVATE -fsanitize=address)
-    target_link_options(1brc_duckdb_decimal PRIVATE -fsanitize=address)
+    target_link_options(1brc_duckdb PRIVATE -fsanitize=address)
 endif()
 
 # Add test executable

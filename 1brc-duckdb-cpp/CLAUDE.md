@@ -73,7 +73,7 @@ The solution optimizes DuckDB performance through:
 Uses DuckDB's `READ_CSV` function with explicit parameters:
 - `header=false`
 - `delim=';'`
-- `columns={'station_name':'VARCHAR','measurement':'DECIMAL(3,1)'}`
+- `columns={'station_name':'VARCHAR','measurement':'DOUBLE'}`
 
 ### Compiler Optimizations
 For maximum performance, use aggressive compiler flags:
@@ -84,7 +84,7 @@ For maximum performance, use aggressive compiler flags:
 ## Input/Output Format
 
 - **Input**: Text file with format `<station_name>;<temperature>` per line
-- **Output**: `<station_name>=<min>/<mean>/<max>` sorted alphabetically
+- **Output**: CSV format with columns `station_name,min_measurement,mean_measurement,max_measurement` sorted alphabetically
 - Temperature range: -99.9 to 99.9 with one decimal place
 - Maximum 10,000 unique stations
 

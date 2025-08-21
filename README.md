@@ -6,14 +6,12 @@ This repository contains high-performance implementations of the [One Billion Ro
 
 ## 🏆 Performance Results
 
-Both implementations achieve exceptional sub-10-second performance on the full 1-billion-row dataset. The table below summarizes the benchmark results for both `Decimal` and `Double` schema types.
+Both implementations achieve exceptional sub-10-second performance on the full 1-billion-row dataset using Float64/Double data types.
 
-| Implementation         | Schema  | Mean Time (s) | Std Dev (s) | Min Time (s) | Max Time (s) | Binary Size |
-| ---------------------- | ------- | ------------- | ----------- | ------------ | ------------ | ----------- |
-| **1brc-datafusion-rs** | Decimal | 5.56          | 0.05        | 5.49         | 5.67         | 37M         |
-| **1brc-datafusion-rs** | Double  | 5.68          | 0.11        | 5.47         | 5.83         | 37M         |
-| **1brc-duckdb-cpp**    | Decimal | 8.53          | 0.08        | 8.45         | 8.71         | 29K         |
-| **1brc-duckdb-cpp**    | Double  | 8.83          | 0.06        | 8.70         | 8.92         | 29K         |
+| Implementation         | Mean Time (s) | Std Dev (s) | Min Time (s) | Max Time (s) | Binary Size |
+| ---------------------- | ------------- | ----------- | ------------ | ------------ | ----------- |
+| **1brc-datafusion-rs** | 5.68          | 0.11        | 5.47         | 5.83         | 37M         |
+| **1brc-duckdb-cpp**    | 8.83          | 0.06        | 8.70         | 8.92         | 29K         |
 
 *Benchmarks performed on AMD Ryzen 9 5900X (24 cores) @ 4.95 GHz, 32GB RAM*
 
@@ -66,17 +64,17 @@ java -cp . dev.morling.onebrc.CreateMeasurements 1000000000
 
 # 2a. Run Rust implementation (fastest)
 cd 1brc-datafusion-rs
-./build_updated.sh
+./build.sh
 ./benchmark.sh                                              # Comprehensive benchmark
 # OR manually:
-time ./target/release/onebrc-datafusion-double ../test_data/measurements_1b.txt results_double.csv
+time ./target/release/onebrc-datafusion ../test_data/measurements_1b.txt results.csv
 
 # 2b. Run C++ implementation
 cd ../1brc-duckdb-cpp
-./build_updated.sh
+./build.sh
 ./benchmark.sh                                              # Comprehensive benchmark  
 # OR manually:
-time ./build/1brc_duckdb_double ../test_data/measurements_1b.txt results_double.csv
+time ./build/1brc_duckdb ../test_data/measurements_1b.txt results.csv
 ```
 
 ## Architecture Strategy
@@ -119,16 +117,14 @@ Results are sorted alphabetically by station name with temperatures rounded to o
 ├── 1brc-duckdb-cpp/            # C++ implementation using DuckDB
 │   ├── README.md               # Detailed C++ implementation guide
 │   ├── CLAUDE.md               # Claude Code guidance
-│   ├── src/main_double.cpp     # Double-precision implementation
-│   ├── src/main_decimal.cpp    # Decimal-precision implementation
+│   ├── src/main.cpp            # Float64/Double implementation
 │   ├── test.sh                 # Test script (uses measurements_1k.txt)
 │   ├── benchmark.sh            # Comprehensive benchmark script
 │   └── build/                  # Compiled binaries
 ├── 1brc-datafusion-rs/         # Rust implementation using DataFusion  
 │   ├── README.md               # Detailed Rust implementation guide
 │   ├── CLAUDE.md               # Claude Code guidance
-│   ├── src/main_double.rs      # Float64 implementation
-│   ├── src/main_decimal.rs     # Decimal128 implementation
+│   ├── src/main.rs             # Float64 implementation
 │   ├── test.sh                 # Test script (uses measurements_1k.txt)
 │   ├── benchmark.sh            # Comprehensive benchmark script
 │   └── target/release/         # Compiled binaries

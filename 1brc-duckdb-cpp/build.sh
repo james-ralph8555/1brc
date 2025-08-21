@@ -1,6 +1,6 @@
 #!/run/current-system/sw/bin/bash
 
-# Build script for 1BRC DuckDB C++ Implementation (Updated with dual schemas)
+# Build script for 1BRC DuckDB C++ Implementation
 # Usage: ./build.sh [debug|release|flamegraph|clean]
 # - debug: Fast build with debug symbols
 # - release: Optimized build (default)
@@ -62,22 +62,19 @@ cmake -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE ..
 echo -e "\n${YELLOW}Building executables...${NC}"
 make -j$(nproc)
 
-# Check if executables were created
-if [[ -f "1brc_duckdb_double" ]] && [[ -f "1brc_duckdb_decimal" ]]; then
+# Check if executable was created
+if [[ -f "1brc_duckdb" ]]; then
     echo -e "\n${GREEN}✓ Build successful!${NC}"
-    echo -e "${GREEN}Executables created:${NC}"
+    echo -e "${GREEN}Executable created:${NC}"
     if [[ "$BUILD_TYPE" == "flamegraph" || "$BUILD_TYPE" == "FLAMEGRAPH" ]]; then
-        echo -e "  - 1brc_duckdb_double (Float64 schema, debug symbols)"
-        echo -e "  - 1brc_duckdb_decimal (Decimal(3,1) schema, debug symbols)"
+        echo -e "  - 1brc_duckdb (Float64/Double schema, debug symbols)"
         echo -e "\n${GREEN}✓ Flamegraph-ready build completed!${NC}"
-        echo -e "${YELLOW}Executables ready for flamegraph profiling${NC}"
+        echo -e "${YELLOW}Executable ready for flamegraph profiling${NC}"
     else
-        echo -e "  - 1brc_duckdb_double (Float64 schema)"
-        echo -e "  - 1brc_duckdb_decimal (Decimal(3,1) schema)"
+        echo -e "  - 1brc_duckdb (Float64/Double schema)"
     fi
     echo -e "\n${YELLOW}Usage:${NC}"
-    echo -e "  ./1brc_duckdb_double <input_file> <output_csv>"
-    echo -e "  ./1brc_duckdb_decimal <input_file> <output_csv>"
+    echo -e "  ./1brc_duckdb <input_file> <output_csv>"
     echo -e "\n${YELLOW}Build completed in $CMAKE_BUILD_TYPE mode${NC}"
 else
     echo -e "\n${RED}✗ Build failed!${NC}"
