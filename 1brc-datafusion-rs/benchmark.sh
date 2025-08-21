@@ -74,26 +74,18 @@ fi
 EXECUTABLES=()
 EXEC_NAMES=()
 
-if [[ -f "target/release/onebrc-datafusion-double" ]]; then
-    EXECUTABLES+=("target/release/onebrc-datafusion-double")
-    EXEC_NAMES+=("Double schema (release)")
-elif [[ -f "target/debug/onebrc-datafusion-double" ]]; then
-    EXECUTABLES+=("target/debug/onebrc-datafusion-double")
-    EXEC_NAMES+=("Double schema (debug)")
-fi
-
-if [[ -f "target/release/onebrc-datafusion-decimal" ]]; then
-    EXECUTABLES+=("target/release/onebrc-datafusion-decimal")
-    EXEC_NAMES+=("Decimal schema (release)")
-elif [[ -f "target/debug/onebrc-datafusion-decimal" ]]; then
-    EXECUTABLES+=("target/debug/onebrc-datafusion-decimal")
-    EXEC_NAMES+=("Decimal schema (debug)")
+if [[ -f "target/release/onebrc-datafusion" ]]; then
+    EXECUTABLES+=("target/release/onebrc-datafusion")
+    EXEC_NAMES+=("Float64 schema (release)")
+elif [[ -f "target/debug/onebrc-datafusion" ]]; then
+    EXECUTABLES+=("target/debug/onebrc-datafusion")
+    EXEC_NAMES+=("Float64 schema (debug)")
 fi
 
 if [[ ${#EXECUTABLES[@]} -eq 0 ]]; then
     echo -e "${RED}Error: No executables found${NC}"
     echo "Build the project first with:"
-    echo "  ./build_updated.sh release"
+    echo "  ./build.sh release"
     echo "  # OR"
     echo "  cargo build --release"
     exit 1
@@ -154,12 +146,8 @@ for i in "${!EXECUTABLES[@]}"; do
             # Fallback to cargo flamegraph but warn about rebuild
             echo -e "${YELLOW}Warning: Using cargo flamegraph - this will rebuild the binary${NC}"
             
-            # Determine binary name for cargo flamegraph
-            if [[ "$executable" == *"double"* ]]; then
-                binary_name="onebrc-datafusion-double"
-            else
-                binary_name="onebrc-datafusion-decimal"
-            fi
+            # Use single binary name for cargo flamegraph
+            binary_name="onebrc-datafusion"
             
             timeout 300 CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph \
                 --bin="$binary_name" \

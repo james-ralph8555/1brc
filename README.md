@@ -10,7 +10,7 @@ Both implementations achieve exceptional sub-10-second performance on the full 1
 
 | Implementation         | Mean Time (s) | Std Dev (s) | Min Time (s) | Max Time (s) | Binary Size |
 | ---------------------- | ------------- | ----------- | ------------ | ------------ | ----------- |
-| **1brc-datafusion-rs** | 5.68          | 0.11        | 5.47         | 5.83         | 37M         |
+| **1brc-datafusion-rs** | 4.902         | 0.097       | 4.794        | 5.055        | 31M         |
 | **1brc-duckdb-cpp**    | 8.83          | 0.06        | 8.70         | 8.92         | 29K         |
 
 *Benchmarks performed on AMD Ryzen 9 5900X (24 cores) @ 4.95 GHz, 32GB RAM*

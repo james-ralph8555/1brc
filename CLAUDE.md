@@ -58,7 +58,7 @@ This approach avoids the complexity of building custom high-performance parsers,
 ### 1brc-datafusion-rs  
 - **Technology**: Rust with Apache DataFusion query engine
 - **Strategy**: SQL-based approach with systematic optimization (schema elimination, compiler tuning, parallelism)
-- **Performance**: **5.68 seconds mean time** for 1 billion rows (5.47s min, 5.83s max)
+- **Performance**: **4.902 seconds mean time** for 1 billion rows (4.794s min, 5.055s max)
 - **Build**: Cargo with aggressive release profile and Profile-Guided Optimization (PGO)
 - **Key Optimizations**: Explicit schema definition, native CPU targeting, multi-core target partitions, `Float64` type.
 
@@ -135,7 +135,7 @@ Results are sorted alphabetically by station name, with temperatures rounded to 
 ## Key Files
 - Each implementation has its own README.md with specific instructions:
   - `1brc-duckdb-cpp/README.md` - C++ DuckDB implementation guide with 7.416s benchmark results
-  - `1brc-datafusion-rs/README.md` - Rust DataFusion implementation guide with 6.26s performance  
+  - `1brc-datafusion-rs/README.md` - Rust DataFusion implementation guide with 4.902s performance  
 - Each implementation has its own CLAUDE.md with detailed implementation context
 - Shared dataset generation is documented in main README.md
 - Both implementations include test scripts and sample data for validation

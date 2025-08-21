@@ -75,19 +75,14 @@ fi
 EXECUTABLES=()
 EXEC_NAMES=()
 
-if [[ -f "$BUILD_DIR/1brc_duckdb_double" ]]; then
-    EXECUTABLES+=("$BUILD_DIR/1brc_duckdb_double")
-    EXEC_NAMES+=("Double schema")
-fi
-
-if [[ -f "$BUILD_DIR/1brc_duckdb_decimal" ]]; then
-    EXECUTABLES+=("$BUILD_DIR/1brc_duckdb_decimal")
-    EXEC_NAMES+=("Decimal schema")
+if [[ -f "$BUILD_DIR/1brc_duckdb" ]]; then
+    EXECUTABLES+=("$BUILD_DIR/1brc_duckdb")
+    EXEC_NAMES+=("DOUBLE schema")
 fi
 
 if [[ ${#EXECUTABLES[@]} -eq 0 ]]; then
     echo -e "${RED}Error: No executables found in $BUILD_DIR${NC}"
-    echo "Build the project first with: ./build_updated.sh release"
+    echo "Build the project first with: ./build.sh release"
     exit 1
 fi
 

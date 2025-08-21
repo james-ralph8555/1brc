@@ -207,6 +207,12 @@ hyperfine --warmup 3 './target/release/onebrc-datafusion sample_measurements.txt
 
 ### Performance Results
 
+**Latest Benchmark Results (with PGO)**:
+- **Mean Time**: 4.902 seconds ± 0.097s
+- **Range**: 4.794s - 5.055s (10 runs)
+- **Throughput**: 2.61 GB/s
+- **Processing Rate**: 204,004,146 rows/s
+
 See the [main README.md](../../README.md) for consolidated performance benchmarks.
 
 
