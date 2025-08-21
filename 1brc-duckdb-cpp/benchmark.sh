@@ -127,13 +127,36 @@ for i in "${!EXECUTABLES[@]}"; do
     if [[ "$FLAMEGRAPH_ENABLED" == "true" ]]; then
         echo -e "${YELLOW}Generating flamegraph for: $exec_name${NC}"
         
-        # Generate flamegraph using the executable directly
-        flamegraph \
-            --output="flamegraph_${exec_name// /_}.svg" \
-            -- "./$executable" "$DATASET_PATH" "results_flamegraph.csv"
+        # Check if executable has debug symbols
+        if ! file "./$executable" | grep -q "not stripped"; then
+            echo -e "${YELLOW}Warning: Binary may not have debug symbols for optimal flamegraph${NC}"
+            echo -e "${YELLOW}Consider building with: ./build.sh flamegraph${NC}"
+        fi
         
-        echo -e "${GREEN}Flamegraph saved to: flamegraph_${exec_name// /_}.svg${NC}"
-        rm -f results_flamegraph.csv
+        # Generate flamegraph using perf directly (avoids rebuild)
+        flamegraph_file="flamegraph_${exec_name// /_}.svg"
+        
+        if command -v perf &> /dev/null && command -v flamegraph &> /dev/null; then
+            # Use perf + flamegraph.pl directly 
+            timeout 300 perf record -F 997 -g "./$executable" "$DATASET_PATH" "results_flamegraph.csv" && \
+            perf script | flamegraph > "$flamegraph_file"
+            
+            echo -e "${GREEN}Flamegraph saved to: $flamegraph_file${NC}"
+        elif command -v flamegraph &> /dev/null; then
+            # Use flamegraph directly 
+            timeout 300 flamegraph \
+                --output="$flamegraph_file" \
+                -- "./$executable" "$DATASET_PATH" "results_flamegraph.csv"
+            
+            echo -e "${GREEN}Flamegraph saved to: $flamegraph_file${NC}"
+        else
+            echo -e "${RED}Error: Neither perf+flamegraph nor flamegraph found${NC}"
+            echo -e "${YELLOW}Install with:${NC}"
+            echo -e "  cargo install flamegraph  # for flamegraph tool"
+            echo -e "  # OR install perf and flamegraph.pl separately"
+        fi
+        
+        rm -f results_flamegraph.csv perf.data
         echo ""
     fi
     

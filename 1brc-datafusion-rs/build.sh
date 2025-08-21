@@ -1,9 +1,10 @@
 #!/run/current-system/sw/bin/bash
 
 # Build script for 1BRC DataFusion Rust Implementation (Updated with dual schemas)
-# Usage: ./build_updated.sh [debug|release|pgo|clean]
+# Usage: ./build.sh [debug|release|flamegraph|pgo|clean]
 # - debug: Fast build with debug symbols
 # - release: Optimized build with native CPU targeting (default)
+# - flamegraph: Release build with debug symbols for profiling
 # - pgo: Profile-Guided Optimization build (automated 3-phase process)
 # - clean: Remove target directory and artifacts
 
@@ -124,6 +125,19 @@ case "$BUILD_TYPE" in
         RUSTFLAGS='-C target-cpu=native'
         echo -e "${YELLOW}=== Building 1BRC DataFusion Rust Implementation (Release) ===${NC}"
         ;;
+    "flamegraph"|"FLAMEGRAPH")
+        BUILD_FLAG="--release"
+        TARGET_DIR="target/release"
+        RUSTFLAGS='-C target-cpu=native'
+        echo -e "${YELLOW}=== Building 1BRC DataFusion Rust Implementation (Flamegraph-ready) ===${NC}"
+        echo -e "${YELLOW}Building with debug symbols for profiling...${NC}"
+        CARGO_PROFILE_RELEASE_DEBUG=true cargo build --release
+        echo -e "\n${GREEN}✓ Flamegraph-ready build completed!${NC}"
+        echo -e "${GREEN}Executables ready for flamegraph profiling:${NC}"
+        echo -e "  - $TARGET_DIR/onebrc-datafusion-double (Float64 schema, debug symbols)"
+        echo -e "  - $TARGET_DIR/onebrc-datafusion-decimal (Decimal128(3,1) schema, debug symbols)"
+        exit 0
+        ;;
     "pgo"|"PGO")
         build_pgo
         exit 0
@@ -140,7 +154,7 @@ case "$BUILD_TYPE" in
         exit 0
         ;;
     *)
-        echo -e "${RED}Error: Invalid build type '$BUILD_TYPE'. Use 'debug', 'release', 'pgo', or 'clean'${NC}"
+        echo -e "${RED}Error: Invalid build type '$BUILD_TYPE'. Use 'debug', 'release', 'flamegraph', 'pgo', or 'clean'${NC}"
         exit 1
         ;;
 esac

@@ -1,17 +1,19 @@
 # One Billion Row Challenge Implementations
 
+![Flamegraph](flamegraph.jpg)
+
 This repository contains high-performance implementations of the [One Billion Row Challenge](https://github.com/gunnarmorling/1brc) using different technologies and optimization strategies.
 
 ## 🏆 Performance Results
 
 Both implementations achieve exceptional sub-10-second performance on the full 1-billion-row dataset. The table below summarizes the benchmark results for both `Decimal` and `Double` schema types.
 
-| Implementation         | Schema  | Mean Time (s) | Std Dev (s) | Min Time (s) | Max Time (s) |
-| ---------------------- | ------- | ------------- | ----------- | ------------ | ------------ |
-| **1brc-datafusion-rs** | Decimal | 5.56          | 0.05        | 5.49         | 5.67         |
-| **1brc-datafusion-rs** | Double  | 5.68          | 0.11        | 5.47         | 5.83         |
-| **1brc-duckdb-cpp**    | Decimal | 8.53          | 0.08        | 8.45         | 8.71         |
-| **1brc-duckdb-cpp**    | Double  | 8.83          | 0.06        | 8.70         | 8.92         |
+| Implementation         | Schema  | Mean Time (s) | Std Dev (s) | Min Time (s) | Max Time (s) | Binary Size |
+| ---------------------- | ------- | ------------- | ----------- | ------------ | ------------ | ----------- |
+| **1brc-datafusion-rs** | Decimal | 5.56          | 0.05        | 5.49         | 5.67         | 37M         |
+| **1brc-datafusion-rs** | Double  | 5.68          | 0.11        | 5.47         | 5.83         | 37M         |
+| **1brc-duckdb-cpp**    | Decimal | 8.53          | 0.08        | 8.45         | 8.71         | 29K         |
+| **1brc-duckdb-cpp**    | Double  | 8.83          | 0.06        | 8.70         | 8.92         | 29K         |
 
 *Benchmarks performed on AMD Ryzen 9 5900X (24 cores) @ 4.95 GHz, 32GB RAM*
 
@@ -87,6 +89,13 @@ Both implementations use a **query engine approach** rather than custom data pro
 - **Minimal Host Code**: Focus only on configuration and result formatting
 
 This approach avoids the complexity of building custom high-performance parsers, instead relying on heavily optimized, parallel, and vectorized analytical database engines.
+
+## Implementation Standardization
+
+Both implementations follow key standardizations for consistency:
+
+- **No A Priori Station List**: Implementations dynamically discover weather stations from the data rather than using a predefined list of 413 stations
+- **CSV Output Format**: All implementations output results as CSV files instead of the original challenge's print format, enabling better data processing and analysis
 
 ### Output Format
 Both implementations process input format `<station_name>;<temperature>` and produce a CSV file:

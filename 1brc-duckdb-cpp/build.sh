@@ -1,9 +1,10 @@
 #!/run/current-system/sw/bin/bash
 
 # Build script for 1BRC DuckDB C++ Implementation (Updated with dual schemas)
-# Usage: ./build_updated.sh [debug|release|clean]
+# Usage: ./build.sh [debug|release|flamegraph|clean]
 # - debug: Fast build with debug symbols
 # - release: Optimized build (default)
+# - flamegraph: Release build with debug symbols for profiling
 # - clean: Remove build directory and artifacts
 
 set -e
@@ -27,6 +28,11 @@ case "$BUILD_TYPE" in
         CMAKE_BUILD_TYPE="Release"
         echo -e "${YELLOW}=== Building 1BRC DuckDB C++ Implementation (Release) ===${NC}"
         ;;
+    "flamegraph"|"FLAMEGRAPH")
+        CMAKE_BUILD_TYPE="RelWithDebInfo"
+        echo -e "${YELLOW}=== Building 1BRC DuckDB C++ Implementation (Flamegraph-ready) ===${NC}"
+        echo -e "${YELLOW}Building optimized release with debug symbols for profiling...${NC}"
+        ;;
     "clean"|"CLEAN")
         echo -e "${YELLOW}=== Cleaning 1BRC DuckDB C++ Implementation ===${NC}"
         if [[ -d "$BUILD_DIR" ]]; then
@@ -39,7 +45,7 @@ case "$BUILD_TYPE" in
         exit 0
         ;;
     *)
-        echo -e "${RED}Error: Invalid build type '$BUILD_TYPE'. Use 'debug', 'release', or 'clean'${NC}"
+        echo -e "${RED}Error: Invalid build type '$BUILD_TYPE'. Use 'debug', 'release', 'flamegraph', or 'clean'${NC}"
         exit 1
         ;;
 esac
@@ -60,8 +66,15 @@ make -j$(nproc)
 if [[ -f "1brc_duckdb_double" ]] && [[ -f "1brc_duckdb_decimal" ]]; then
     echo -e "\n${GREEN}✓ Build successful!${NC}"
     echo -e "${GREEN}Executables created:${NC}"
-    echo -e "  - 1brc_duckdb_double (Float64 schema)"
-    echo -e "  - 1brc_duckdb_decimal (Decimal(3,1) schema)"
+    if [[ "$BUILD_TYPE" == "flamegraph" || "$BUILD_TYPE" == "FLAMEGRAPH" ]]; then
+        echo -e "  - 1brc_duckdb_double (Float64 schema, debug symbols)"
+        echo -e "  - 1brc_duckdb_decimal (Decimal(3,1) schema, debug symbols)"
+        echo -e "\n${GREEN}✓ Flamegraph-ready build completed!${NC}"
+        echo -e "${YELLOW}Executables ready for flamegraph profiling${NC}"
+    else
+        echo -e "  - 1brc_duckdb_double (Float64 schema)"
+        echo -e "  - 1brc_duckdb_decimal (Decimal(3,1) schema)"
+    fi
     echo -e "\n${YELLOW}Usage:${NC}"
     echo -e "  ./1brc_duckdb_double <input_file> <output_csv>"
     echo -e "  ./1brc_duckdb_decimal <input_file> <output_csv>"
